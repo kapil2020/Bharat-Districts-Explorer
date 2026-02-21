@@ -44,7 +44,7 @@ An interactive, browser-based visual analytics tool that renders India’s distr
 
 ## Project Structure (typical)
 
-├─ src/
+```├─ src/
 │ ├─ App.jsx / App.tsx
 │ ├─ components/
 │ ├─ styles/
@@ -52,7 +52,7 @@ An interactive, browser-based visual analytics tool that renders India’s distr
 ├─ public/
 ├─ package.json
 └─ vite.config.js
-
+```
 
 ## How It Works (Implementation Notes)
 
