@@ -6,7 +6,8 @@ import {
 import {
   Map as MapIcon, Search, Moon, Sun, Info, X, Users,
   BookOpen, Footprints, Bus, Navigation, Activity, ZoomIn, ZoomOut, Home, 
-  Globe, Compass, ArrowUpRight, ChevronRight, MapPin, Ruler, TrendingUp, TrendingDown, ChevronDown, Heart, Briefcase
+  Globe, Compass, ArrowUpRight, ChevronRight, MapPin, Ruler, TrendingUp, TrendingDown, ChevronDown, Heart, Briefcase, 
+  Target, BarChart3, Database, ShieldCheck
 } from 'lucide-react';
 
 // --- CONFIGURATION ---
@@ -35,22 +36,30 @@ const MODE_COLORS = {
 
 const LAYER_CONFIG = {
   population: {
-    label: 'Population Scale',
+    label: 'Population',
+    mobileLabel: 'Pop',
+    icon: <Users size={14} />,
     ramp: ['#fff5f0', '#fee0d2', '#fcbba1', '#fc9272', '#fb6a4a', '#ef3b2c', '#cb181d', '#99000d'],
     threshold: 1500000
   },
   literacy: {
-    label: 'Literacy %',
+    label: 'Literacy',
+    mobileLabel: 'Lit',
+    icon: <BookOpen size={14} />,
     ramp: ['#f7fcf5', '#e5f5e0', '#c7e9c0', '#a1d99b', '#74c476', '#41ab5d', '#238b45', '#005a32'],
     threshold: 75
   },
   active: {
-    label: 'Walk/Cycle %',
+    label: 'Walk/Cycle',
+    mobileLabel: 'Act',
+    icon: <Footprints size={14} />,
     ramp: ['#fff7ed', '#ffedd5', '#fed7aa', '#fdba74', '#fb923c', '#f97316', '#ea580c', '#c2410c'],
     threshold: 30
   },
   public: {
-    label: 'Public Transit %',
+    label: 'Public Transit',
+    mobileLabel: 'Pub',
+    icon: <Bus size={14} />,
     ramp: ['#f0f9ff', '#e0f2fe', '#bae6fd', '#7dd3fc', '#38bdf8', '#0ea5e9', '#0284c7', '#0369a1'],
     threshold: 20
   }
@@ -169,39 +178,51 @@ export default function App() {
           <motion.div 
             key="hero"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, y: -100 }}
-            className="h-screen w-full flex flex-col items-center justify-center p-6 text-center relative overflow-hidden"
+            className="min-h-screen w-full flex flex-col items-center justify-start py-20 px-6 text-center relative overflow-y-auto"
           >
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(249,115,22,0.1),transparent_50%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(249,115,22,0.1),transparent_50%)] pointer-events-none" />
             
+            {/* HERO CONTENT */}
             <motion.div 
-              initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}
-              className="space-y-10 z-10"
+              initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }}
+              className="space-y-10 z-10 max-w-4xl"
             >
               <div className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 p-4 rounded-[2rem] w-fit mx-auto shadow-2xl">
                 <Compass size={56} />
               </div>
               <div>
-                <h1 className="text-7xl sm:text-9xl font-black tracking-tighter mb-2">India <span className="text-orange-500">Viz</span></h1>
-                <div className="flex flex-col items-center gap-2">
-                  <p className="text-lg sm:text-2xl font-bold tracking-[0.3em] uppercase text-slate-400">Demographics x Mobility</p>
-                  <p className="text-sm sm:text-lg font-medium opacity-60 italic">From the lens of census, district wise and visualised.</p>
+                <h1 className="text-7xl sm:text-9xl font-black tracking-tighter mb-4 leading-none">India <span className="text-orange-500">Viz</span></h1>
+                <div className="flex flex-col items-center gap-3">
+                  <p className="text-xl sm:text-3xl font-bold tracking-[0.2em] uppercase text-slate-400">Demographics x Mobility</p>
+                  <p className="text-base sm:text-xl font-medium opacity-60 max-w-2xl">
+                    From the lens of census, district-wise visual intelligence of the nation's movement.
+                  </p>
                 </div>
               </div>
               
               <div className="flex flex-col items-center gap-6">
                 <button 
                   onClick={() => setView('app')}
-                  className="group px-12 py-5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full font-black text-xl shadow-2xl hover:scale-105 active:scale-95 transition-all flex items-center gap-4 mx-auto"
+                  className="group px-14 py-6 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full font-black text-xl shadow-2xl hover:scale-105 active:scale-95 transition-all flex items-center gap-4 mx-auto"
                 >
-                  Launch Workstation
+                  Start Analysis
                   <ChevronRight size={24} className="group-hover:translate-x-1 transition-transform" />
                 </button>
                 <p className="text-xs font-bold uppercase tracking-widest opacity-40 flex items-center gap-2">
                   Made with <Heart size={14} className="text-red-500 fill-red-500" /> by Kapil
                 </p>
               </div>
+
+              {/* FEATURES GRID */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-20 pt-20 border-t border-slate-200 dark:border-slate-800">
+                <FeatureCard icon={<Globe className="text-blue-500"/>} title="Interactive Maps" desc="High-resolution SVG polygons for 640+ districts." />
+                <FeatureCard icon={<Target className="text-orange-500"/>} title="Benchmarking" desc="Real-time comparison with India's national averages." />
+                <FeatureCard icon={<BarChart3 className="text-emerald-500"/>} title="Mobility Data" desc="Commute distance and mode share analytics." />
+                <FeatureCard icon={<ShieldCheck className="text-purple-500"/>} title="Verified Data" desc="Sourced from Official Census 2011 datasets." />
+              </div>
             </motion.div>
-            <div className="absolute bottom-10 animate-bounce opacity-20"><ChevronDown size={32}/></div>
+            
+            <div className="h-20" />
           </motion.div>
         ) : (
           <motion.div 
@@ -209,45 +230,41 @@ export default function App() {
             initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }}
             className="flex-1 flex flex-col h-screen"
           >
-            {/* COMPACT NAV */}
-            <header className={`px-4 sm:px-6 py-4 border-b flex items-center justify-between z-50 ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
+            {/* OPTIMIZED HEADER */}
+            <header className={`px-4 py-3 border-b flex items-center justify-between z-50 ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`}>
               <div className="flex items-center gap-3">
-                <button onClick={() => setView('landing')} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg hidden sm:block hover:scale-110 transition-transform"><Compass size={20}/></button>
-                <div className="leading-none">
-                  <h2 className="font-black text-lg sm:text-xl tracking-tight">India Districts</h2>
-                  <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mt-0.5">Demographics x Mobility</p>
+                <button onClick={() => setView('landing')} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg hover:scale-110 transition-transform"><Compass size={20}/></button>
+                <div className="leading-none hidden sm:block">
+                  <h2 className="font-black text-lg tracking-tight">India Districts</h2>
+                  <p className="text-[8px] font-black uppercase tracking-widest text-slate-400 mt-0.5">Demographics x Mobility</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 sm:gap-4">
-                <div className="relative hidden lg:block">
+              <div className="flex items-center gap-1.5 sm:gap-4 flex-1 justify-end">
+                {/* Search - Hidden on tiny screens, icon only on medium */}
+                <div className="relative hidden md:block">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                  <input type="text" placeholder="Search District..." value={search} onChange={e => setSearch(e.target.value)}
-                    className={`pl-10 pr-4 py-2 w-56 rounded-xl text-sm border outline-none focus:ring-2 focus:ring-slate-500 ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-slate-50 border-slate-200'}`} />
-                  <AnimatePresence>
-                    {results.length > 0 && (
-                      <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 5 }}
-                        className={`absolute top-full left-0 right-0 mt-2 rounded-xl shadow-2xl border overflow-hidden z-50 ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'}`}>
-                        {results.map((r, i) => (
-                          <button key={i} onClick={() => { setSelected(r.properties); setSearch(''); }} className="w-full text-left px-4 py-3 text-sm hover:bg-slate-500/10 border-b last:border-0 border-slate-100 dark:border-slate-800">
-                            <div className="font-bold">{r.properties.display_name}</div>
-                            <div className="text-[10px] opacity-50 font-bold uppercase">{r.properties.display_state}</div>
-                          </button>
-                        ))}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                  <input type="text" placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)}
+                    className={`pl-10 pr-4 py-2 w-44 lg:w-56 rounded-xl text-sm border outline-none focus:ring-2 focus:ring-slate-500 ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-slate-50 border-slate-200'}`} />
                 </div>
 
-                <div className="flex items-center p-1 bg-slate-100 dark:bg-slate-800/50 rounded-xl overflow-x-auto max-w-[200px] sm:max-w-none">
-                  <button onClick={() => setLayer('population')} className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase transition-all whitespace-nowrap ${layer === 'population' ? 'bg-red-500 text-white shadow-md' : 'opacity-40 hover:opacity-100'}`}>Population</button>
-                  <button onClick={() => setLayer('literacy')} className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase transition-all whitespace-nowrap ${layer === 'literacy' ? 'bg-emerald-500 text-white shadow-md' : 'opacity-40 hover:opacity-100'}`}>Literacy</button>
-                  <button onClick={() => setLayer('active')} className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase transition-all whitespace-nowrap ${layer === 'active' ? 'bg-orange-500 text-white shadow-md' : 'opacity-40 hover:opacity-100'}`}>Active Transit</button>
-                  <button onClick={() => setLayer('public')} className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase transition-all whitespace-nowrap ${layer === 'public' ? 'bg-blue-500 text-white shadow-md' : 'opacity-40 hover:opacity-100'}`}>Public Transit</button>
+                {/* LAYER SWITCHER - ZERO SLIDING DESIGN */}
+                <div className="flex items-center p-1 bg-slate-100 dark:bg-slate-800/50 rounded-xl w-full max-w-[280px] sm:max-w-none sm:w-auto">
+                  {Object.keys(LAYER_CONFIG).map(l => (
+                    <button 
+                      key={l} 
+                      onClick={() => setLayer(l)} 
+                      className={`flex-1 sm:flex-none px-2 sm:px-3 py-1.5 rounded-lg text-[10px] font-black uppercase transition-all flex items-center justify-center gap-1.5 ${layer === l ? 'bg-white dark:bg-slate-700 shadow-md text-slate-900 dark:text-white' : 'opacity-40 hover:opacity-100'}`}
+                    >
+                      <span className="hidden lg:inline">{LAYER_CONFIG[l as keyof typeof LAYER_CONFIG].icon}</span>
+                      <span className="sm:hidden">{LAYER_CONFIG[l as keyof typeof LAYER_CONFIG].mobileLabel}</span>
+                      <span className="hidden sm:inline">{LAYER_CONFIG[l as keyof typeof LAYER_CONFIG].label}</span>
+                    </button>
+                  ))}
                 </div>
 
-                <button onClick={() => setIsDark(!isDark)} className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                  {isDark ? <Sun size={18} /> : <Moon size={18} />}
+                <button onClick={() => setIsDark(!isDark)} className="p-2 sm:p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0">
+                  {isDark ? <Sun size={16} /> : <Moon size={16} />}
                 </button>
               </div>
             </header>
@@ -267,7 +284,7 @@ export default function App() {
                   <div style={{ transform: `translate(${transform.x}px, ${transform.y}px) scale(${transform.scale})`, transition: isDragging ? 'none' : 'transform 0.4s cubic-bezier(0.1, 0.9, 0.2, 1)' }}>
                     <svg viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`} className="w-[95vmin] h-[95vmin] overflow-visible">
                       {data.features.map((f: any, i: number) => {
-                        const val = layer === 'population' ? f.properties.pop : layer === 'sexRatio' ? f.properties.sexRatio : layer === 'literacy' ? f.properties.lit : layer === 'active' ? (f.properties.mobility.walk + f.properties.mobility.cycle) : f.properties.mobility.pt;
+                        const val = layer === 'population' ? f.properties.pop : layer === 'literacy' ? f.properties.lit : layer === 'active' ? (f.properties.mobility.walk + f.properties.mobility.cycle) : f.properties.mobility.pt;
                         const isSelected = selected?.display_name === f.properties.display_name;
                         return (
                           <path key={i} d={f.svgPath} 
@@ -285,8 +302,8 @@ export default function App() {
                 )}
 
                 {/* Legend Overlay */}
-                <div className="absolute bottom-6 left-6 p-4 rounded-3xl border bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl shadow-2xl border-white/20">
-                  <h4 className="text-[10px] font-black uppercase tracking-widest opacity-40 mb-3">{LAYER_CONFIG[layer as keyof typeof LAYER_CONFIG]?.label}</h4>
+                <div className="absolute bottom-6 left-6 p-4 rounded-3xl border bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl shadow-2xl border-white/20 hidden sm:block">
+                  <h4 className="text-[10px] font-black uppercase tracking-widest opacity-40 mb-3">{LAYER_CONFIG[layer as keyof typeof LAYER_CONFIG]?.label} Index</h4>
                   <div className="flex h-2.5 w-40 rounded-full overflow-hidden bg-slate-200/50 dark:bg-slate-800/50">
                     {LAYER_CONFIG[layer as keyof typeof LAYER_CONFIG]?.ramp.map((c, i) => <div key={i} className="flex-1" style={{ backgroundColor: c }} />)}
                   </div>
@@ -316,7 +333,7 @@ export default function App() {
                     <h2 className="text-5xl font-black mb-10 tracking-tighter leading-[0.9]">{selected.display_name}</h2>
 
                     {/* BENTO STATS */}
-                    <div className="grid grid-cols-2 gap-4 mb-8">
+                    <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-8">
                       <AnalysisCard label="Population" value={new Intl.NumberFormat('en-IN').format(Math.floor(selected.pop))} target={INDIA_AVG.pop} current={selected.pop} icon={<Users size={16}/>} />
                       <AnalysisCard label="Sex Ratio" value={selected.sexRatio} target={INDIA_AVG.sexRatio} current={selected.sexRatio} sub="Females / 1k Males" icon={<Heart size={16}/>} accent="text-pink-500" />
                       <AnalysisCard label="Literacy %" value={`${selected.lit.toFixed(1)}%`} target={INDIA_AVG.literacy} current={selected.lit} accent="text-emerald-500" icon={<BookOpen size={16}/>} />
@@ -326,8 +343,7 @@ export default function App() {
                     </div>
 
                     <div className="space-y-12">
-                      {/* Mode Share Analysis */}
-                      <div className={`p-8 rounded-[3rem] border ${isDark ? 'bg-slate-800/40 border-slate-700' : 'bg-slate-50 border-slate-200 shadow-inner'}`}>
+                      <div className={`p-6 sm:p-8 rounded-[3rem] border ${isDark ? 'bg-slate-800/40 border-slate-700' : 'bg-slate-50 border-slate-200 shadow-inner'}`}>
                         <div className="flex items-center justify-between mb-8">
                            <h3 className="text-xs font-black uppercase tracking-widest flex items-center gap-2"><Navigation size={18} className="text-blue-500"/> Mode Share %</h3>
                         </div>
@@ -348,21 +364,10 @@ export default function App() {
                             </PieChart>
                           </ResponsiveContainer>
                         </div>
-                        <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-700 grid grid-cols-2 gap-4">
-                           <div className="text-center">
-                              <p className="text-[10px] font-black uppercase opacity-40 mb-1">Active Share</p>
-                              <p className="text-lg font-black text-emerald-500">{(selected.mobility.walk + selected.mobility.cycle).toFixed(1)}%</p>
-                           </div>
-                           <div className="text-center">
-                              <p className="text-[10px] font-black uppercase opacity-40 mb-1">Motor Share</p>
-                              <p className="text-lg font-black text-red-500">{(selected.mobility.twowheeler + selected.mobility.car).toFixed(1)}%</p>
-                           </div>
-                        </div>
                       </div>
 
-                      {/* Distance Analysis */}
                       <div>
-                        <h3 className="text-xs font-black uppercase tracking-widest mb-6 flex items-center gap-2"><Ruler size={18} className="text-orange-500"/> Commute Distance (% of Workers)</h3>
+                        <h3 className="text-xs font-black uppercase tracking-widest mb-6 flex items-center gap-2"><Ruler size={18} className="text-orange-500"/> Distance Range (% Workers)</h3>
                         <div className="h-56">
                           <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={[
@@ -383,7 +388,6 @@ export default function App() {
                         </div>
                       </div>
                     </div>
-
                     <div className="h-20" />
                   </motion.div>
                 )}
@@ -391,13 +395,13 @@ export default function App() {
             </main>
 
             {/* REAL FOOTER */}
-            <footer className={`px-8 py-3 border-t flex flex-col sm:flex-row justify-between items-center text-[10px] font-black uppercase tracking-[0.2em] z-[100] ${isDark ? 'bg-slate-950 border-slate-900 text-slate-500' : 'bg-white border-slate-100 text-slate-400'}`}>
-              <div className="flex items-center gap-6">
+            <footer className={`px-4 sm:px-8 py-3 border-t flex flex-col sm:flex-row justify-between items-center text-[10px] font-black uppercase tracking-[0.2em] z-[100] ${isDark ? 'bg-slate-950 border-slate-900 text-slate-500' : 'bg-white border-slate-100 text-slate-400'}`}>
+              <div className="flex items-center gap-6 text-center sm:text-left mb-2 sm:mb-0">
                 <span>India Districts Explorer &copy; 2011-2024</span>
                 <span className="hidden md:block opacity-10">|</span>
-                <span className="text-blue-500/50">Census Mobility Intelligence Prototype</span>
+                <span className="hidden sm:inline text-blue-500/50">Census Mobility Intelligence</span>
               </div>
-              <div className="mt-2 md:mt-0 flex items-center gap-2">
+              <div className="flex items-center gap-2">
                 Made with <Heart size={10} className="text-red-500 fill-red-500" /> by 
                 <a href="https://kapil2020.github.io/website/" target="_blank" rel="noreferrer" className="text-slate-900 dark:text-white hover:underline decoration-orange-500 decoration-2 underline-offset-4 transition-all">Kapil</a>
               </div>
@@ -409,21 +413,31 @@ export default function App() {
   );
 }
 
-// --- ANALYTICS COMPONENT ---
+// --- UI COMPONENTS ---
+function FeatureCard({ icon, title, desc }: any) {
+  return (
+    <div className="p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-left transition-all hover:shadow-xl hover:-translate-y-1">
+      <div className="mb-4">{icon}</div>
+      <h4 className="font-black text-sm uppercase tracking-wider mb-2">{title}</h4>
+      <p className="text-xs opacity-50 font-medium leading-relaxed">{desc}</p>
+    </div>
+  );
+}
+
 function AnalysisCard({ label, value, target, current, sub, accent = "text-slate-900 dark:text-white", icon }: any) {
   const diff = ((current - target) / target) * 100;
   const isHigher = diff >= 0;
 
   return (
-    <div className="p-5 rounded-3xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900/50 shadow-sm transition-all hover:shadow-xl hover:-translate-y-1 group">
+    <div className="p-4 sm:p-5 rounded-3xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900/50 shadow-sm transition-all hover:shadow-xl hover:-translate-y-1 group">
       <div className="flex items-center justify-between mb-3">
         <p className="text-[9px] font-black uppercase tracking-widest opacity-30 group-hover:opacity-100 transition-opacity">{label}</p>
         <div className="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg opacity-40">{icon}</div>
       </div>
-      <div className={`text-2xl font-black mb-1 tracking-tight ${accent}`}>{value}</div>
-      {sub && <p className="text-[8px] opacity-40 font-bold uppercase mb-3">{sub}</p>}
+      <div className={`text-xl sm:text-2xl font-black mb-1 tracking-tight ${accent}`}>{value}</div>
+      {sub && <p className="text-[8px] opacity-40 font-bold uppercase mb-3 leading-tight">{sub}</p>}
       <div className={`flex items-center gap-1.5 text-[9px] font-black ${isHigher ? 'text-emerald-500' : 'text-orange-500'}`}>
-        {isHigher ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
+        {isHigher ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
         {Math.abs(diff).toFixed(1)}% {isHigher ? 'above' : 'below'} national avg
       </div>
     </div>
