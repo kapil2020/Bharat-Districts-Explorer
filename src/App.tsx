@@ -2,8 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
+  PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Legend, LabelList
+} from 'recharts';
+import {
   Search, X, Users, BookOpen, Footprints, Bus, Navigation, ZoomIn, ZoomOut, Home, 
-  Globe, Compass, ChevronRight, Ruler, TrendingUp, TrendingDown, Heart, Briefcase, 
+  Globe, Compass, ChevronRight, Ruler, TrendingUp, TrendingDown, ChevronDown, Heart, Briefcase, 
   Target, BarChart3, ShieldCheck
 } from 'lucide-react';
 
@@ -39,14 +42,16 @@ const LAYER_CONFIG = {
     label: 'Population',
     mobileLabel: 'Pop',
     field: 'pop',
+    icon: <Users size={18} strokeWidth={2.5} />,
     ramp: ['#fff5f0', '#fee0d2', '#fcbba1', '#fc9272', '#fb6a4a', '#ef3b2c', '#cb181d', '#99000d'],
     threshold: 1500000,
     accent: 'text-red-500', softBg: 'bg-red-50', border: 'border-red-200', btnBg: 'bg-red-500'
   },
   literacy: {
     label: 'Literacy Rate',
-    mobileLabel: 'Lit %',
+    mobileLabel: 'Lit',
     field: 'lit',
+    icon: <BookOpen size={18} strokeWidth={2.5} />,
     ramp: ['#f7fcf5', '#e5f5e0', '#c7e9c0', '#a1d99b', '#74c476', '#41ab5d', '#238b45', '#005a32'],
     threshold: 75,
     accent: 'text-emerald-600', softBg: 'bg-emerald-50', border: 'border-emerald-200', btnBg: 'bg-emerald-500'
@@ -55,6 +60,7 @@ const LAYER_CONFIG = {
     label: 'Active Transit',
     mobileLabel: 'Active',
     field: 'activeTransit',
+    icon: <Footprints size={18} strokeWidth={2.5} />,
     ramp: ['#fff7ed', '#ffedd5', '#fed7aa', '#fdba74', '#fb923c', '#f97316', '#ea580c', '#c2410c'],
     threshold: 30,
     accent: 'text-orange-500', softBg: 'bg-orange-50', border: 'border-orange-200', btnBg: 'bg-orange-500'
@@ -63,6 +69,7 @@ const LAYER_CONFIG = {
     label: 'Public Transit',
     mobileLabel: 'Public',
     field: 'publicTransit',
+    icon: <Bus size={18} strokeWidth={2.5} />,
     ramp: ['#f0f9ff', '#e0f2fe', '#bae6fd', '#7dd3fc', '#38bdf8', '#0ea5e9', '#0284c7', '#0369a1'],
     threshold: 20,
     accent: 'text-blue-500', softBg: 'bg-blue-50', border: 'border-blue-200', btnBg: 'bg-blue-500'
@@ -308,7 +315,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-[100dvh] w-screen flex flex-col overflow-hidden font-sans antialiased bg-white text-slate-900 selection:bg-blue-100">
+    <div className="min-h-[100dvh] w-screen flex flex-col overflow-hidden font-sans antialiased bg-[#f5f5f7] text-slate-900 selection:bg-blue-100">
       
       {/* Global Styles: Custom Font & Hide Scrollbars */}
       <style dangerouslySetInnerHTML={{__html: `
@@ -324,15 +331,16 @@ export default function App() {
             key="hero"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 0.98, filter: 'blur(5px)' }}
             transition={{ duration: 0.6 }}
-            className="min-h-[100dvh] w-full flex flex-col items-center justify-center p-6 text-center relative overflow-y-auto no-scrollbar bg-[#fcfcfc]"
+            className="min-h-[100dvh] w-full flex flex-col items-center justify-center p-6 text-center relative overflow-y-auto no-scrollbar bg-white"
           >
-            {/* 3D Kinetic Background & SVG Pencil Doodle */}
-            <Background3D />
+            {/* Cinematic Gradient Background */}
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-50/80 via-transparent to-rose-50/80 pointer-events-none" />
+            
             <PencilDoodle />
             
-            <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1, duration: 0.8 }} className="z-10 max-w-5xl w-full flex flex-col items-center">
+            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1, duration: 0.8 }} className="z-10 max-w-5xl w-full flex flex-col items-center">
               
-              <div className="bg-white/80 backdrop-blur-xl text-blue-600 p-5 rounded-[2rem] w-fit mx-auto shadow-[0_15px_40px_rgba(0,0,0,0.06)] border border-white mb-10">
+              <div className="bg-white text-blue-600 p-5 rounded-[2rem] w-fit shadow-[0_15px_40px_rgba(0,0,0,0.08)] border border-slate-100 mb-10">
                 <Compass size={52} strokeWidth={2} />
               </div>
               
@@ -355,7 +363,7 @@ export default function App() {
               </button>
             </motion.div>
 
-            <div className="absolute bottom-8 left-0 right-0 flex justify-center text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400 gap-1.5 z-10">
+            <div className="absolute bottom-8 left-0 right-0 flex justify-center text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400 gap-1.5">
               Made with <Heart size={14} className="text-rose-500 fill-rose-500" /> by Kapil
             </div>
           </motion.div>
@@ -367,7 +375,7 @@ export default function App() {
               
               {/* Brand Logo & Search */}
               <div className="flex w-full sm:w-auto items-center gap-3 pointer-events-auto">
-                <button onClick={() => setView('landing')} className="p-3 bg-white/90 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.06)] border border-white rounded-2xl hover:scale-105 transition-all text-blue-600 shrink-0">
+                <button onClick={() => setView('landing')} className="p-3 bg-white/90 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.06)] border border-slate-100 rounded-2xl hover:scale-105 hover:shadow-[0_15px_40px_rgba(0,0,0,0.1)] transition-all text-blue-600 shrink-0">
                   <Compass size={22} strokeWidth={2.5} />
                 </button>
                 
@@ -375,12 +383,12 @@ export default function App() {
                 <div className="relative flex-1 sm:w-64">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                   <input type="text" placeholder="Search District..." value={search} onChange={e => setSearch(e.target.value)}
-                    className="pl-11 pr-4 py-3 sm:py-3.5 w-full rounded-2xl text-sm font-bold border border-white bg-white/90 backdrop-blur-xl outline-none focus:ring-2 focus:ring-blue-500/30 shadow-[0_8px_30px_rgba(0,0,0,0.06)] transition-all placeholder:text-slate-400" />
+                    className="pl-11 pr-4 py-3.5 w-full rounded-2xl text-sm font-bold border border-slate-100 bg-white/90 backdrop-blur-xl outline-none focus:ring-2 focus:ring-blue-500/30 shadow-[0_8px_30px_rgba(0,0,0,0.06)] transition-all placeholder:text-slate-400" />
                   
                   <AnimatePresence>
                     {results.length > 0 && (
                       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
-                        className="absolute top-full left-0 right-0 mt-3 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-white bg-white/95 backdrop-blur-3xl overflow-hidden z-[100]">
+                        className="absolute top-full left-0 right-0 mt-3 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-slate-100 bg-white/95 backdrop-blur-3xl overflow-hidden z-[100]">
                         {results.map((r, i) => (
                           <button key={i} onClick={() => { setSelected(r.properties); setSearch(''); }} className="w-full text-left px-5 py-4 hover:bg-blue-50 border-b last:border-0 border-slate-100 transition-colors">
                             <div className="font-bold text-slate-900">{r.properties.display_name}</div>
@@ -394,7 +402,7 @@ export default function App() {
               </div>
 
               {/* Desktop Layer Controls (Colorful & Floating) */}
-              <div className="hidden sm:flex items-center p-1.5 bg-white/90 backdrop-blur-xl rounded-2xl border border-white shadow-[0_8px_30px_rgba(0,0,0,0.06)] pointer-events-auto">
+              <div className="hidden sm:flex items-center p-1.5 bg-white/90 backdrop-blur-xl rounded-2xl border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.06)] pointer-events-auto">
                 {Object.keys(LAYER_CONFIG).map(l => {
                   const config = LAYER_CONFIG[l as keyof typeof LAYER_CONFIG];
                   const isActive = layer === l;
@@ -448,7 +456,7 @@ export default function App() {
                 )}
 
                 {/* Legend - Floating Bottom Left */}
-                <div className="absolute bottom-28 sm:bottom-8 left-4 sm:left-6 p-4 sm:p-5 rounded-3xl bg-white/95 backdrop-blur-xl shadow-[0_15px_40px_rgba(0,0,0,0.08)] border border-white z-20 pointer-events-none hidden sm:block">
+                <div className="absolute bottom-28 sm:bottom-8 left-4 sm:left-6 p-4 sm:p-5 rounded-3xl bg-white/95 backdrop-blur-xl shadow-[0_15px_40px_rgba(0,0,0,0.08)] border border-slate-100 z-20 pointer-events-none hidden sm:block">
                   <h4 className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 mb-3">{LAYER_CONFIG[layer as keyof typeof LAYER_CONFIG]?.label}</h4>
                   <div className="flex h-3 w-32 sm:w-48 rounded-full overflow-hidden shadow-inner bg-slate-100">
                     {LAYER_CONFIG[layer as keyof typeof LAYER_CONFIG]?.ramp.map((c, i) => <div key={i} className="flex-1" style={{ backgroundColor: c }} />)}
@@ -458,8 +466,8 @@ export default function App() {
 
                 {/* Zoom Controls - Desktop Only */}
                 <div className="hidden sm:flex absolute bottom-8 right-6 flex-col gap-3 z-20 pointer-events-auto">
-                  <button onClick={() => setTransform({ x: 0, y: 0, scale: 1 })} className="p-4 bg-white/90 backdrop-blur-xl rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.08)] border border-white active:scale-95 transition-transform text-slate-700 hover:text-blue-600 hover:bg-white"><Home size={20} /></button>
-                  <div className="flex flex-col rounded-2xl overflow-hidden shadow-[0_15px_40px_rgba(0,0,0,0.08)] border border-white bg-white/90 backdrop-blur-xl text-slate-700">
+                  <button onClick={() => setTransform({ x: 0, y: 0, scale: 1 })} className="p-4 bg-white/90 backdrop-blur-xl rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.08)] border border-slate-100 active:scale-95 transition-transform text-slate-700 hover:text-blue-600 hover:bg-white"><Home size={20} /></button>
+                  <div className="flex flex-col rounded-2xl overflow-hidden shadow-[0_15px_40px_rgba(0,0,0,0.08)] border border-slate-100 bg-white/90 backdrop-blur-xl text-slate-700">
                     <button onClick={() => setTransform(p => ({ ...p, scale: p.scale + 0.5 }))} className="p-4 hover:bg-slate-50 transition-colors border-b border-slate-100 hover:text-blue-600"><ZoomIn size={20} /></button>
                     <button onClick={() => setTransform(p => ({ ...p, scale: Math.max(0.5, p.scale - 0.5) }))} className="p-4 hover:bg-slate-50 transition-colors hover:text-blue-600"><ZoomOut size={20} /></button>
                   </div>
@@ -474,7 +482,7 @@ export default function App() {
                     <motion.div 
                       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                       onClick={() => setSelected(null)}
-                      className="absolute inset-0 bg-slate-900/10 backdrop-blur-[2px] z-[50] md:hidden"
+                      className="absolute inset-0 bg-slate-900/10 backdrop-blur-sm z-[50] md:hidden"
                     />
 
                     <motion.div 
@@ -489,13 +497,13 @@ export default function App() {
                         <div className="absolute top-2 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-slate-200 rounded-full md:hidden" />
                         <div className="pr-4 mt-2 md:mt-0">
                           <p className="text-blue-600 font-bold text-[10px] tracking-[0.3em] uppercase mb-1">{selected.display_state}</p>
-                          <h2 className="text-3xl sm:text-4xl font-black tracking-tighter leading-none text-slate-900 break-words">{selected.display_name}</h2>
+                          <h2 className="text-3xl sm:text-4xl font-black tracking-tighter leading-none text-slate-900 break-words line-clamp-2">{selected.display_name}</h2>
                         </div>
                         <button onClick={() => setSelected(null)} className="p-2.5 bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-900 rounded-full transition-colors shrink-0 mt-2 md:mt-0"><X size={20} /></button>
                       </div>
 
                       {/* 2. SCROLLABLE BODY */}
-                      <div className="flex-1 overflow-y-auto p-5 sm:p-8 space-y-8 bg-slate-50/50 no-scrollbar">
+                      <div className="flex-1 overflow-y-auto p-5 sm:p-8 space-y-6 sm:space-y-8 bg-slate-50/50 no-scrollbar pb-10">
                         
                         {/* 2x2 BENTO STATS */}
                         <div className="grid grid-cols-2 gap-3 sm:gap-4">
@@ -506,37 +514,37 @@ export default function App() {
                         </div>
 
                         {/* NATIVE iOS STYLE CHARTS (NO RECHARTS ON MOBILE FOR 100% RELIABILITY) */}
-                        <div className="space-y-8 pb-12">
+                        <div className="space-y-6 sm:space-y-8 pb-12">
                           
                           {/* Native Mode Share Stacked Bar */}
                           <div className="p-6 sm:p-8 rounded-[2rem] bg-white border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
-                            <h3 className="text-[11px] font-black uppercase tracking-[0.2em] mb-6 flex items-center gap-2 text-slate-800"><Navigation size={18} className="text-blue-500"/> Mode Share %</h3>
+                            <h3 className="text-[11px] font-black uppercase tracking-[0.2em] mb-6 flex items-center gap-2 text-slate-800"><Navigation size={18} className="text-blue-500"/> Mode Share</h3>
                             
-                            <div className="w-full h-8 rounded-full overflow-hidden flex mb-8 shadow-inner bg-slate-100">
-                              <motion.div initial={{width:0}} animate={{width:`${selected.mobility.walk}%`}} transition={{duration: 0.8}} className="h-full" style={{backgroundColor: MODE_COLORS.walk}} title="Walk"/>
-                              <motion.div initial={{width:0}} animate={{width:`${selected.mobility.bicycle}%`}} transition={{duration: 0.8}} className="h-full" style={{backgroundColor: MODE_COLORS.bicycle}} title="Bicycle"/>
-                              <motion.div initial={{width:0}} animate={{width:`${selected.mobility.pt}%`}} transition={{duration: 0.8}} className="h-full" style={{backgroundColor: MODE_COLORS.public}} title="Public"/>
-                              <motion.div initial={{width:0}} animate={{width:`${selected.mobility.twowheeler}%`}} transition={{duration: 0.8}} className="h-full" style={{backgroundColor: MODE_COLORS.twoWheeler}} title="2W"/>
-                              <motion.div initial={{width:0}} animate={{width:`${selected.mobility.car}%`}} transition={{duration: 0.8}} className="h-full" style={{backgroundColor: MODE_COLORS.car}} title="Car"/>
+                            <div className="w-full h-7 sm:h-8 rounded-full overflow-hidden flex mb-8 shadow-inner bg-slate-100">
+                              <motion.div initial={{width:0}} animate={{width:`${selected.mobility.walk}%`}} transition={{duration: 0.8, ease: "easeOut"}} className="h-full" style={{backgroundColor: MODE_COLORS.walk}} title="Walk"/>
+                              <motion.div initial={{width:0}} animate={{width:`${selected.mobility.bicycle}%`}} transition={{duration: 0.8, ease: "easeOut", delay: 0.1}} className="h-full" style={{backgroundColor: MODE_COLORS.bicycle}} title="Bicycle"/>
+                              <motion.div initial={{width:0}} animate={{width:`${selected.mobility.pt}%`}} transition={{duration: 0.8, ease: "easeOut", delay: 0.2}} className="h-full" style={{backgroundColor: MODE_COLORS.public}} title="Public"/>
+                              <motion.div initial={{width:0}} animate={{width:`${selected.mobility.twowheeler}%`}} transition={{duration: 0.8, ease: "easeOut", delay: 0.3}} className="h-full" style={{backgroundColor: MODE_COLORS.twoWheeler}} title="2W"/>
+                              <motion.div initial={{width:0}} animate={{width:`${selected.mobility.car}%`}} transition={{duration: 0.8, ease: "easeOut", delay: 0.4}} className="h-full" style={{backgroundColor: MODE_COLORS.car}} title="Car"/>
                             </div>
 
-                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-5 gap-x-2">
-                              <LegendItem color={MODE_COLORS.walk} label="Walk" value={`${selected.mobility.walk}%`} />
-                              <LegendItem color={MODE_COLORS.bicycle} label="Bicycle" value={`${selected.mobility.bicycle}%`} />
-                              <LegendItem color={MODE_COLORS.public} label="Public" value={`${selected.mobility.pt}%`} />
-                              <LegendItem color={MODE_COLORS.twoWheeler} label="2-Wheeler" value={`${selected.mobility.twowheeler}%`} />
-                              <LegendItem color={MODE_COLORS.car} label="Car" value={`${selected.mobility.car}%`} />
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-4 sm:gap-y-5 gap-x-2">
+                              <LegendItem color={MODE_COLORS.walk} label="Walk" value={selected.mobility.walk || 0} />
+                              <LegendItem color={MODE_COLORS.bicycle} label="Bicycle" value={selected.mobility.bicycle || 0} />
+                              <LegendItem color={MODE_COLORS.public} label="Public" value={selected.mobility.pt || 0} />
+                              <LegendItem color={MODE_COLORS.twoWheeler} label="2-Wheeler" value={selected.mobility.twowheeler || 0} />
+                              <LegendItem color={MODE_COLORS.car} label="Car" value={selected.mobility.car || 0} />
                             </div>
                           </div>
 
                           {/* Native Distance Progress Bars */}
                           <div className="p-6 sm:p-8 rounded-[2rem] bg-white border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
-                            <h3 className="text-[11px] font-black uppercase tracking-[0.2em] mb-8 flex items-center gap-2 text-slate-800"><Ruler size={18} className="text-orange-500"/> Distance (% Workers)</h3>
+                            <h3 className="text-[11px] font-black uppercase tracking-[0.2em] mb-8 flex items-center gap-2 text-slate-800"><Ruler size={18} className="text-orange-500"/> Distance Breakdown</h3>
                             <div className="space-y-6">
-                               <ProgressBar label="< 1 km" value={selected.distance.under1} color={MODE_COLORS.walk} />
-                               <ProgressBar label="1 - 5 km" value={selected.distance.oneToFive} color={MODE_COLORS.twoWheeler} />
-                               <ProgressBar label="5 - 10 km" value={selected.distance.fiveToTen} color={MODE_COLORS.public} />
-                               <ProgressBar label="10+ km" value={selected.distance.overTen} color={MODE_COLORS.car} />
+                               <ProgressBar label="< 1 km" value={selected.distance.under1 || 0} color={MODE_COLORS.walk} />
+                               <ProgressBar label="1 - 5 km" value={selected.distance.oneToFive || 0} color={MODE_COLORS.twoWheeler} />
+                               <ProgressBar label="5 - 10 km" value={selected.distance.fiveToTen || 0} color={MODE_COLORS.public} />
+                               <ProgressBar label="10+ km" value={selected.distance.overTen || 0} color={MODE_COLORS.car} />
                             </div>
                           </div>
                         </div>
@@ -552,9 +560,9 @@ export default function App() {
               {!selected && (
                 <motion.div 
                   initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 100, opacity: 0 }}
-                  className="sm:hidden absolute bottom-6 left-1/2 -translate-x-1/2 z-40 w-[95%] pointer-events-auto"
+                  className="sm:hidden absolute bottom-6 left-0 right-0 z-40 px-3 pointer-events-none flex justify-center w-full"
                 >
-                  <div className="grid grid-cols-4 items-center p-2 bg-white/95 backdrop-blur-3xl rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-slate-100">
+                  <div className="w-full max-w-[380px] grid grid-cols-4 items-start p-1.5 bg-white/95 backdrop-blur-3xl rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-slate-100 pointer-events-auto">
                     {Object.keys(LAYER_CONFIG).map(l => {
                       const config = LAYER_CONFIG[l as keyof typeof LAYER_CONFIG];
                       const isActive = layer === l;
@@ -562,13 +570,13 @@ export default function App() {
                         <button 
                           key={l} 
                           onClick={() => setLayer(l)} 
-                          className={`relative flex flex-col items-center justify-center w-full py-2 gap-1.5 transition-colors z-10 ${isActive ? config.accent : 'text-slate-400'}`}
+                          className="relative flex flex-col items-center justify-center w-full py-2 gap-1.5 transition-colors z-10"
                         >
-                          {isActive && <motion.div layoutId="mobile-dock" className={`absolute inset-0 rounded-3xl ${config.softBg}`} style={{ zIndex: -1 }} transition={{ type: "spring", stiffness: 400, damping: 30 }} />}
-                          <div className="p-1 rounded-full z-10">
+                          {isActive && <motion.div layoutId="mobile-dock" className={`absolute inset-0 rounded-[1.5rem] ${config.softBg}`} style={{ zIndex: -1 }} transition={{ type: "spring", stiffness: 400, damping: 30 }} />}
+                          <div className={`p-1.5 rounded-full z-10 ${isActive ? config.accent : 'text-slate-400'}`}>
                             {config.icon}
                           </div>
-                          <span className="text-[10px] font-bold tracking-tight whitespace-nowrap z-10">{config.mobileLabel}</span>
+                          <span className={`text-[9px] font-black tracking-tight z-10 ${isActive ? config.accent : 'text-slate-400'}`}>{config.mobileLabel}</span>
                         </button>
                       )
                     })}
@@ -584,7 +592,8 @@ export default function App() {
   );
 }
 
-// --- UI COMPONENTS ---
+// --- NATIVE UI COMPONENTS ---
+
 function FeatureCard({ icon, title, desc }: any) {
   return (
     <div className="p-8 rounded-[2.5rem] bg-white border border-slate-100 shadow-[0_10px_40px_rgba(0,0,0,0.04)] transition-all hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] hover:-translate-y-1">
@@ -599,43 +608,47 @@ function AnalysisCard({ label, value, target, current, sub, config, icon }: any)
   const diff = ((current - target) / target) * 100;
   const isHigher = diff >= 0;
   return (
-    <div className={`p-5 sm:p-6 rounded-[2rem] border bg-white shadow-[0_8px_20px_rgba(0,0,0,0.03)] transition-transform hover:-translate-y-1 flex flex-col justify-between ${config?.border || 'border-slate-100'}`}>
+    <div className={`p-4 sm:p-5 rounded-3xl border bg-white shadow-[0_8px_20px_rgba(0,0,0,0.02)] transition-transform hover:-translate-y-1 flex flex-col justify-between ${config?.border || 'border-slate-100'}`}>
       <div>
-        <div className="flex items-center justify-between mb-4">
-          <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-slate-400 leading-tight pr-2">{label}</p>
-          <div className={`p-2 rounded-xl ${config?.softBg || 'bg-slate-50'} ${config?.accent || 'text-slate-500'}`}>{icon}</div>
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-slate-400 leading-tight pr-2">{label}</p>
+          <div className={`p-1.5 rounded-lg ${config?.softBg || 'bg-slate-50'} ${config?.accent || 'text-slate-500'}`}>{icon}</div>
         </div>
-        <div className={`text-2xl sm:text-3xl font-black mb-1 tracking-tighter ${config?.accent || 'text-slate-900'}`}>{value}</div>
-        {sub && <p className="text-[9px] text-slate-400 font-bold uppercase mb-2">{sub}</p>}
+        <div className={`text-xl sm:text-2xl font-black mb-1 tracking-tighter ${config?.accent || 'text-slate-900'}`}>{value}</div>
+        {sub && <p className="text-[8px] sm:text-[9px] text-slate-400 font-bold uppercase mb-2">{sub}</p>}
       </div>
-      <div className={`flex items-center gap-1.5 text-[10px] font-bold tracking-widest mt-4 pt-4 border-t border-slate-50 ${isHigher ? 'text-emerald-500' : 'text-orange-500'}`}>
-        {isHigher ? <TrendingUp size={14} className="shrink-0"/> : <TrendingDown size={14} className="shrink-0"/>}
+      <div className={`flex items-center gap-1.5 text-[9px] sm:text-[10px] font-bold tracking-widest mt-3 pt-3 border-t border-slate-50 ${isHigher ? 'text-emerald-500' : 'text-orange-500'}`}>
+        {isHigher ? <TrendingUp size={12} className="shrink-0"/> : <TrendingDown size={12} className="shrink-0"/>}
         {Math.abs(diff).toFixed(1)}% {isHigher ? 'Above' : 'Below'}
       </div>
     </div>
   );
 }
 
-function LegendItem({ color, label, value }: { color: string, label: string, value: string }) {
+// 100% Native Legend Item (Replaces Recharts)
+function LegendItem({ color, label, value }: { color: string, label: string, value: number }) {
+  const displayValue = value !== undefined && value !== null ? Number(value).toFixed(1) : '0.0';
   return (
-    <div className="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 transition-colors">
+    <div className="flex items-center justify-between p-2 sm:p-2.5 rounded-2xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100">
       <div className="flex items-center gap-2">
         <div className="w-3.5 h-3.5 rounded-full shadow-sm" style={{ backgroundColor: color }} />
-        <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">{label}</span>
+        <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-slate-500">{label}</span>
       </div>
-      <span className="text-sm font-black text-slate-900">{value}</span>
+      <span className="text-sm font-black text-slate-900">{displayValue}%</span>
     </div>
   );
 }
 
+// 100% Native Progress Bar (Replaces Recharts BarChart)
 function ProgressBar({ label, value, color }: { label: string, value: number, color: string }) {
+  const displayValue = value !== undefined && value !== null ? Number(value).toFixed(1) : '0.0';
   return (
     <div>
       <div className="flex justify-between items-end mb-2">
-        <span className="text-[11px] font-black text-slate-600 uppercase tracking-widest">{label}</span>
-        <span className="text-sm font-black text-slate-900">{value.toFixed(1)}%</span>
+        <span className="text-[10px] sm:text-[11px] font-black text-slate-500 uppercase tracking-widest">{label}</span>
+        <span className="text-sm font-black text-slate-900">{displayValue}%</span>
       </div>
-      <div className="h-3.5 w-full bg-slate-100 rounded-full overflow-hidden shadow-inner">
+      <div className="h-3 sm:h-3.5 w-full bg-slate-100 rounded-full overflow-hidden shadow-inner">
         <motion.div 
           initial={{ width: 0 }} 
           animate={{ width: `${value}%` }} 
