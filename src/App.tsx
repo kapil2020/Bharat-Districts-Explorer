@@ -2,11 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Legend, LabelList
-} from 'recharts';
-import {
   Search, X, Users, BookOpen, Footprints, Bus, Navigation, ZoomIn, ZoomOut, Home, 
-  Globe, Compass, ChevronRight, Ruler, TrendingUp, TrendingDown, ChevronDown, Heart, 
+  Globe, Compass, ChevronRight, Ruler, TrendingUp, TrendingDown, Heart, Briefcase, 
   Target, BarChart3, ShieldCheck
 } from 'lucide-react';
 
@@ -21,8 +18,10 @@ const MAX_LAT = 37.5;
 // India National Averages (Official Census 2011 Benchmarks)
 const INDIA_AVG = {
   pop: 1845000,
+  sexRatio: 943,
   literacy: 74.04,
   urban: 31.16,
+  workRate: 39.8,
   activeTransit: 35.1,
   publicTransit: 18.2
 };
@@ -30,14 +29,15 @@ const INDIA_AVG = {
 const MODE_COLORS = {
   walk: '#34d399',      // Emerald 400
   bicycle: '#38bdf8',   // Light Blue 400
+  public: '#818cf8',    // Indigo 400
   twoWheeler: '#fbbf24',// Amber 400
-  car: '#f87171',       // Red 400
-  public: '#818cf8'     // Indigo 400
+  car: '#f87171'        // Red 400
 };
 
 const LAYER_CONFIG = {
   population: {
     label: 'Population',
+    mobileLabel: 'Pop',
     field: 'pop',
     ramp: ['#fff5f0', '#fee0d2', '#fcbba1', '#fc9272', '#fb6a4a', '#ef3b2c', '#cb181d', '#99000d'],
     threshold: 1500000,
@@ -45,6 +45,7 @@ const LAYER_CONFIG = {
   },
   literacy: {
     label: 'Literacy Rate',
+    mobileLabel: 'Lit %',
     field: 'lit',
     ramp: ['#f7fcf5', '#e5f5e0', '#c7e9c0', '#a1d99b', '#74c476', '#41ab5d', '#238b45', '#005a32'],
     threshold: 75,
@@ -52,6 +53,7 @@ const LAYER_CONFIG = {
   },
   active: {
     label: 'Active Transit',
+    mobileLabel: 'Active',
     field: 'activeTransit',
     ramp: ['#fff7ed', '#ffedd5', '#fed7aa', '#fdba74', '#fb923c', '#f97316', '#ea580c', '#c2410c'],
     threshold: 30,
@@ -59,6 +61,7 @@ const LAYER_CONFIG = {
   },
   public: {
     label: 'Public Transit',
+    mobileLabel: 'Public',
     field: 'publicTransit',
     ramp: ['#f0f9ff', '#e0f2fe', '#bae6fd', '#7dd3fc', '#38bdf8', '#0ea5e9', '#0284c7', '#0369a1'],
     threshold: 20,
@@ -81,11 +84,10 @@ const Background3D = () => {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     mountRef.current.appendChild(renderer.domElement);
 
-    // Dynamic Topographical Mesh (Light Theme Optimized)
     const geometry = new THREE.PlaneGeometry(40, 40, 60, 60);
     const material = new THREE.PointsMaterial({
       size: 0.04,
-      color: 0x94a3b8, // Elegant slate-400 color
+      color: 0x94a3b8,
       transparent: true,
       opacity: 0.3,
     });
@@ -107,7 +109,6 @@ const Background3D = () => {
       for(let i = 0; i < positions.length; i += 3) {
         const x = positions[i];
         const y = positions[i+1];
-        // Fluid sine wave motion
         positions[i+2] = Math.sin(x * 0.3 + elapsedTime * 0.4) * 1.5 + 
                          Math.cos(y * 0.3 + elapsedTime * 0.2) * 1.5;
       }
@@ -264,22 +265,24 @@ export default function App() {
             display_name: f.properties.dt_name || f.properties.NAME_2 || "District",
             display_state: f.properties.st_nm || f.properties.NAME_1 || "India",
             pop: pop,
+            sexRatio: census.Sex_Ratio || 940,
             lit: census.Literacy || 74,
             urb: Math.round(((census.Urban_Households || 0) / (census.Households || 1)) * 100) || 30,
+            workRate: Math.round(((census.Workers || 0) / pop) * 100) || 40,
             activeTransit: 25 + (seed % 20),
             publicTransit: 10 + (seed % 25),
             mobility: {
-              walk: 20 + (seed % 15),
-              cycle: 5 + (seed % 10),
-              twowheeler: 15 + (seed % 20),
-              car: 2 + (seed % 8),
-              pt: 10 + (seed % 25)
+              walk: parseFloat((20 + (seed % 15)).toFixed(1)),
+              cycle: parseFloat((5 + (seed % 10)).toFixed(1)),
+              twowheeler: parseFloat((15 + (seed % 20)).toFixed(1)),
+              car: parseFloat((2 + (seed % 8)).toFixed(1)),
+              pt: parseFloat((10 + (seed % 25)).toFixed(1))
             },
             distance: {
-              under1: 25 + (seed % 10),
-              oneToFive: 35 + (seed % 15),
-              fiveToTen: 20 + (seed % 10),
-              overTen: 20 - (seed % 10)
+              under1: parseFloat((25 + (seed % 10)).toFixed(1)),
+              oneToFive: parseFloat((35 + (seed % 15)).toFixed(1)),
+              fiveToTen: parseFloat((20 + (seed % 10)).toFixed(1)),
+              overTen: parseFloat((20 - (seed % 10)).toFixed(1))
             }
           }
         };
@@ -445,7 +448,7 @@ export default function App() {
                 )}
 
                 {/* Legend - Floating Bottom Left */}
-                <div className="absolute bottom-28 sm:bottom-8 left-4 sm:left-6 p-4 sm:p-5 rounded-3xl bg-white/95 backdrop-blur-xl shadow-[0_15px_40px_rgba(0,0,0,0.08)] border border-white z-20 pointer-events-none">
+                <div className="absolute bottom-28 sm:bottom-8 left-4 sm:left-6 p-4 sm:p-5 rounded-3xl bg-white/95 backdrop-blur-xl shadow-[0_15px_40px_rgba(0,0,0,0.08)] border border-white z-20 pointer-events-none hidden sm:block">
                   <h4 className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 mb-3">{LAYER_CONFIG[layer as keyof typeof LAYER_CONFIG]?.label}</h4>
                   <div className="flex h-3 w-32 sm:w-48 rounded-full overflow-hidden shadow-inner bg-slate-100">
                     {LAYER_CONFIG[layer as keyof typeof LAYER_CONFIG]?.ramp.map((c, i) => <div key={i} className="flex-1" style={{ backgroundColor: c }} />)}
@@ -479,7 +482,7 @@ export default function App() {
                       animate={{ y: 0, md: { x: 0 } }} 
                       exit={{ y: '100%', md: { y: 0, x: '100%' } }} 
                       transition={{ type: 'spring', damping: 30, stiffness: 250, mass: 0.8 }}
-                      className="absolute bottom-0 right-0 w-full h-[85dvh] md:h-full md:w-[450px] lg:w-[500px] bg-white shadow-[0_-20px_50px_rgba(0,0,0,0.15)] md:shadow-[-20px_0_50px_rgba(0,0,0,0.08)] border-t md:border-t-0 md:border-l border-white z-[60] rounded-t-[2.5rem] md:rounded-none flex flex-col overflow-hidden"
+                      className="absolute bottom-0 right-0 w-full h-[85dvh] md:h-full md:w-[450px] lg:w-[500px] bg-white shadow-[0_-20px_50px_rgba(0,0,0,0.15)] md:shadow-[-20px_0_50px_rgba(0,0,0,0.08)] border-t md:border-t-0 md:border-l border-slate-200 z-[60] rounded-t-[2.5rem] md:rounded-none flex flex-col overflow-hidden"
                     >
                       {/* 1. STRICTLY STICKY HEADER - Fixes the Overlap Bug Permanently */}
                       <div className="shrink-0 relative px-6 pt-6 pb-4 border-b border-slate-100 bg-white/95 backdrop-blur-md z-20 flex items-start justify-between">
@@ -494,7 +497,7 @@ export default function App() {
                       {/* 2. SCROLLABLE BODY */}
                       <div className="flex-1 overflow-y-auto p-5 sm:p-8 space-y-8 bg-slate-50/50 no-scrollbar">
                         
-                        {/* 2x2 BENTO STATS (Removed Work Force / Sex Ratio as requested) */}
+                        {/* 2x2 BENTO STATS */}
                         <div className="grid grid-cols-2 gap-3 sm:gap-4">
                           <AnalysisCard label="Population" value={new Intl.NumberFormat('en-IN').format(selected.pop)} target={INDIA_AVG.pop} current={selected.pop} icon={<Users size={16}/>} config={LAYER_CONFIG.population} />
                           <AnalysisCard label="Literacy %" value={`${selected.lit}%`} target={INDIA_AVG.literacy} current={selected.lit} icon={<BookOpen size={16}/>} config={LAYER_CONFIG.literacy} />
@@ -502,48 +505,38 @@ export default function App() {
                           <AnalysisCard label="Public Transit" value={`${selected.mobility.pt}%`} target={INDIA_AVG.publicTransit} current={selected.mobility.pt} sub="Bus / Train" icon={<Bus size={16}/>} config={LAYER_CONFIG.public} />
                         </div>
 
-                        {/* CHARTS */}
+                        {/* NATIVE iOS STYLE CHARTS (NO RECHARTS ON MOBILE FOR 100% RELIABILITY) */}
                         <div className="space-y-8 pb-12">
+                          
+                          {/* Native Mode Share Stacked Bar */}
                           <div className="p-6 sm:p-8 rounded-[2rem] bg-white border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
                             <h3 className="text-[11px] font-black uppercase tracking-[0.2em] mb-6 flex items-center gap-2 text-slate-800"><Navigation size={18} className="text-blue-500"/> Mode Share %</h3>
-                            <div className="h-64">
-                              <ResponsiveContainer width="100%" height="100%">
-                                <PieChart>
-                                  <Pie data={[
-                                    { name: 'Walk', value: parseFloat(selected.mobility.walk.toFixed(1)), color: MODE_COLORS.walk },
-                                    { name: 'Cycle', value: parseFloat(selected.mobility.cycle.toFixed(1)), color: MODE_COLORS.bicycle },
-                                    { name: '2W', value: parseFloat(selected.mobility.twowheeler.toFixed(1)), color: MODE_COLORS.twoWheeler },
-                                    { name: 'Car', value: parseFloat(selected.mobility.car.toFixed(1)), color: MODE_COLORS.car },
-                                    { name: 'Public', value: parseFloat(selected.mobility.pt.toFixed(1)), color: MODE_COLORS.publicTransport }
-                                  ]} innerRadius={60} outerRadius={85} paddingAngle={4} dataKey="value" stroke="none">
-                                    {Object.values(MODE_COLORS).map((c, i) => <Cell key={i} fill={c} />)}
-                                  </Pie>
-                                  <RechartsTooltip contentStyle={{ borderRadius: '16px', border: 'none', fontSize: '12px', fontWeight: 'bold', boxShadow: '0 15px 40px rgba(0,0,0,0.12)' }} formatter={(v: number) => `${v}%`} />
-                                  <Legend verticalAlign="bottom" height={30} wrapperStyle={{ fontSize: '11px', fontWeight: '900', textTransform: 'uppercase', color: '#64748b' }} />
-                                </PieChart>
-                              </ResponsiveContainer>
+                            
+                            <div className="w-full h-8 rounded-full overflow-hidden flex mb-8 shadow-inner bg-slate-100">
+                              <motion.div initial={{width:0}} animate={{width:`${selected.mobility.walk}%`}} transition={{duration: 0.8}} className="h-full" style={{backgroundColor: MODE_COLORS.walk}} title="Walk"/>
+                              <motion.div initial={{width:0}} animate={{width:`${selected.mobility.bicycle}%`}} transition={{duration: 0.8}} className="h-full" style={{backgroundColor: MODE_COLORS.bicycle}} title="Bicycle"/>
+                              <motion.div initial={{width:0}} animate={{width:`${selected.mobility.pt}%`}} transition={{duration: 0.8}} className="h-full" style={{backgroundColor: MODE_COLORS.public}} title="Public"/>
+                              <motion.div initial={{width:0}} animate={{width:`${selected.mobility.twowheeler}%`}} transition={{duration: 0.8}} className="h-full" style={{backgroundColor: MODE_COLORS.twoWheeler}} title="2W"/>
+                              <motion.div initial={{width:0}} animate={{width:`${selected.mobility.car}%`}} transition={{duration: 0.8}} className="h-full" style={{backgroundColor: MODE_COLORS.car}} title="Car"/>
+                            </div>
+
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-5 gap-x-2">
+                              <LegendItem color={MODE_COLORS.walk} label="Walk" value={`${selected.mobility.walk}%`} />
+                              <LegendItem color={MODE_COLORS.bicycle} label="Bicycle" value={`${selected.mobility.bicycle}%`} />
+                              <LegendItem color={MODE_COLORS.public} label="Public" value={`${selected.mobility.pt}%`} />
+                              <LegendItem color={MODE_COLORS.twoWheeler} label="2-Wheeler" value={`${selected.mobility.twowheeler}%`} />
+                              <LegendItem color={MODE_COLORS.car} label="Car" value={`${selected.mobility.car}%`} />
                             </div>
                           </div>
 
+                          {/* Native Distance Progress Bars */}
                           <div className="p-6 sm:p-8 rounded-[2rem] bg-white border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
                             <h3 className="text-[11px] font-black uppercase tracking-[0.2em] mb-8 flex items-center gap-2 text-slate-800"><Ruler size={18} className="text-orange-500"/> Distance (% Workers)</h3>
-                            <div className="h-56">
-                              <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={[
-                                  { name: '< 1 km', value: parseFloat(selected.distance.under1.toFixed(1)), fill: '#34d399' },
-                                  { name: '1-5 km', value: parseFloat(selected.distance.oneToFive.toFixed(1)), fill: '#fbbf24' },
-                                  { name: '5-10 km', value: parseFloat(selected.distance.fiveToTen.toFixed(1)), fill: '#60a5fa' },
-                                  { name: '10+ km', value: parseFloat(selected.distance.overTen.toFixed(1)), fill: '#f87171' }
-                                ]} layout="vertical" margin={{ left: 0, right: 40 }}>
-                                  <CartesianGrid strokeDasharray="3 3" horizontal={false} opacity={0.3} />
-                                  <XAxis type="number" hide />
-                                  <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fontSize: 11, fontWeight: '900', fill: '#94a3b8' }} width={55} />
-                                  <RechartsTooltip cursor={{ fill: '#f8fafc' }} formatter={(v: number) => `${v}%`} contentStyle={{ borderRadius: '12px', border: 'none', fontSize: '12px', fontWeight: 'bold', boxShadow: '0 15px 40px rgba(0,0,0,0.12)' }}/>
-                                  <Bar dataKey="value" radius={[0, 8, 8, 0]} barSize={24}>
-                                     <LabelList dataKey="value" position="right" formatter={(v: string) => `${v}%`} style={{ fontSize: 13, fontWeight: '900', fill: '#0f172a' }} />
-                                  </Bar>
-                                </BarChart>
-                              </ResponsiveContainer>
+                            <div className="space-y-6">
+                               <ProgressBar label="< 1 km" value={selected.distance.under1} color={MODE_COLORS.walk} />
+                               <ProgressBar label="1 - 5 km" value={selected.distance.oneToFive} color={MODE_COLORS.twoWheeler} />
+                               <ProgressBar label="5 - 10 km" value={selected.distance.fiveToTen} color={MODE_COLORS.public} />
+                               <ProgressBar label="10+ km" value={selected.distance.overTen} color={MODE_COLORS.car} />
                             </div>
                           </div>
                         </div>
@@ -554,14 +547,14 @@ export default function App() {
               </AnimatePresence>
             </main>
 
-            {/* --- TRUE IOS FLOATING BOTTOM TAB BAR (MOBILE ONLY) --- */}
+            {/* --- TRUE IOS FIXED ZERO-SCROLL BOTTOM TAB BAR (MOBILE ONLY) --- */}
             <AnimatePresence>
               {!selected && (
                 <motion.div 
                   initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 100, opacity: 0 }}
-                  className="sm:hidden absolute bottom-6 left-1/2 -translate-x-1/2 z-40 w-[92%] max-w-sm pointer-events-auto"
+                  className="sm:hidden absolute bottom-6 left-1/2 -translate-x-1/2 z-40 w-[95%] pointer-events-auto"
                 >
-                  <div className="flex justify-around items-center p-2 bg-white/95 backdrop-blur-3xl rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-slate-100">
+                  <div className="grid grid-cols-4 items-center p-2 bg-white/95 backdrop-blur-3xl rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-slate-100">
                     {Object.keys(LAYER_CONFIG).map(l => {
                       const config = LAYER_CONFIG[l as keyof typeof LAYER_CONFIG];
                       const isActive = layer === l;
@@ -572,10 +565,10 @@ export default function App() {
                           className={`relative flex flex-col items-center justify-center w-full py-2 gap-1.5 transition-colors z-10 ${isActive ? config.accent : 'text-slate-400'}`}
                         >
                           {isActive && <motion.div layoutId="mobile-dock" className={`absolute inset-0 rounded-3xl ${config.softBg}`} style={{ zIndex: -1 }} transition={{ type: "spring", stiffness: 400, damping: 30 }} />}
-                          <div className={`p-1 rounded-full`}>
+                          <div className="p-1 rounded-full z-10">
                             {config.icon}
                           </div>
-                          <span className="text-[9px] font-bold tracking-wide">{config.label}</span>
+                          <span className="text-[10px] font-bold tracking-tight whitespace-nowrap z-10">{config.mobileLabel}</span>
                         </button>
                       )
                     })}
@@ -618,6 +611,38 @@ function AnalysisCard({ label, value, target, current, sub, config, icon }: any)
       <div className={`flex items-center gap-1.5 text-[10px] font-bold tracking-widest mt-4 pt-4 border-t border-slate-50 ${isHigher ? 'text-emerald-500' : 'text-orange-500'}`}>
         {isHigher ? <TrendingUp size={14} className="shrink-0"/> : <TrendingDown size={14} className="shrink-0"/>}
         {Math.abs(diff).toFixed(1)}% {isHigher ? 'Above' : 'Below'}
+      </div>
+    </div>
+  );
+}
+
+function LegendItem({ color, label, value }: { color: string, label: string, value: string }) {
+  return (
+    <div className="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 transition-colors">
+      <div className="flex items-center gap-2">
+        <div className="w-3.5 h-3.5 rounded-full shadow-sm" style={{ backgroundColor: color }} />
+        <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">{label}</span>
+      </div>
+      <span className="text-sm font-black text-slate-900">{value}</span>
+    </div>
+  );
+}
+
+function ProgressBar({ label, value, color }: { label: string, value: number, color: string }) {
+  return (
+    <div>
+      <div className="flex justify-between items-end mb-2">
+        <span className="text-[11px] font-black text-slate-600 uppercase tracking-widest">{label}</span>
+        <span className="text-sm font-black text-slate-900">{value.toFixed(1)}%</span>
+      </div>
+      <div className="h-3.5 w-full bg-slate-100 rounded-full overflow-hidden shadow-inner">
+        <motion.div 
+          initial={{ width: 0 }} 
+          animate={{ width: `${value}%` }} 
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="h-full rounded-full" 
+          style={{ backgroundColor: color }} 
+        />
       </div>
     </div>
   );
