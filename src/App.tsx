@@ -40,7 +40,6 @@ const LAYER_CONFIG = {
     ramp: ['#fff5f0', '#fee0d2', '#fcbba1', '#fc9272', '#fb6a4a', '#ef3b2c', '#cb181d', '#99000d'],
     threshold: 1500000,
     accent: 'text-red-500',
-    bg: 'bg-red-500',
     softBg: 'bg-red-50',
     border: 'border-red-200'
   },
@@ -50,7 +49,6 @@ const LAYER_CONFIG = {
     ramp: ['#f7fcf5', '#e5f5e0', '#c7e9c0', '#a1d99b', '#74c476', '#41ab5d', '#238b45', '#005a32'],
     threshold: 75,
     accent: 'text-emerald-600',
-    bg: 'bg-emerald-500',
     softBg: 'bg-emerald-50',
     border: 'border-emerald-200'
   },
@@ -60,7 +58,6 @@ const LAYER_CONFIG = {
     ramp: ['#fff7ed', '#ffedd5', '#fed7aa', '#fdba74', '#fb923c', '#f97316', '#ea580c', '#c2410c'],
     threshold: 30,
     accent: 'text-orange-500',
-    bg: 'bg-orange-500',
     softBg: 'bg-orange-50',
     border: 'border-orange-200'
   },
@@ -70,7 +67,6 @@ const LAYER_CONFIG = {
     ramp: ['#f0f9ff', '#e0f2fe', '#bae6fd', '#7dd3fc', '#38bdf8', '#0ea5e9', '#0284c7', '#0369a1'],
     threshold: 20,
     accent: 'text-blue-500',
-    bg: 'bg-blue-500',
     softBg: 'bg-blue-50',
     border: 'border-blue-200'
   }
@@ -216,9 +212,8 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-[100dvh] w-screen flex flex-col overflow-x-hidden font-sans antialiased bg-white text-slate-900 selection:bg-blue-100">
+    <div className="min-h-[100dvh] w-screen flex flex-col overflow-x-hidden font-sans antialiased bg-[#fafafa] text-slate-900 selection:bg-blue-100">
       
-      {/* Hide Scrollbars Utility for clean UI */}
       <style dangerouslySetInnerHTML={{__html: `
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -228,70 +223,91 @@ export default function App() {
         {view === 'landing' ? (
           <motion.div 
             key="hero"
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 0.98, filter: 'blur(5px)' }}
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 0.96, filter: 'blur(8px)' }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="min-h-screen w-full flex flex-col items-center justify-start py-16 sm:py-24 px-4 sm:px-6 text-center relative overflow-y-auto no-scrollbar bg-slate-50"
+            className="min-h-screen w-full flex flex-col items-center justify-start py-16 sm:py-24 px-4 sm:px-6 text-center relative overflow-y-auto no-scrollbar bg-white"
           >
-            {/* Extremely Clean, Soft Gradient Background */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(59,130,246,0.05),transparent_70%)] pointer-events-none" />
+            {/* Cinematic Gradient Background */}
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-50 via-white to-orange-50 pointer-events-none opacity-70" />
             
-            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }} className="space-y-8 sm:space-y-12 z-10 max-w-5xl w-full">
+            <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1, duration: 0.8, ease: "easeOut" }} className="space-y-8 sm:space-y-12 z-10 max-w-5xl w-full">
               
-              <div className="bg-white text-blue-600 p-4 sm:p-5 rounded-3xl sm:rounded-[2rem] w-fit mx-auto shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-slate-100">
-                <Compass size={48} className="sm:w-14 sm:h-14" />
+              <div className="bg-white text-slate-800 p-4 sm:p-5 rounded-[2rem] w-fit mx-auto shadow-[0_10px_40px_rgba(0,0,0,0.06)] border border-slate-100">
+                <Compass size={48} className="sm:w-14 sm:h-14" strokeWidth={1.5} />
               </div>
               
               <div className="px-2">
-                <h1 className="text-6xl sm:text-8xl lg:text-9xl font-black tracking-tighter mb-4 text-slate-900">
-                  India <span className="text-blue-600">Viz</span>
+                <h1 className="text-6xl sm:text-8xl lg:text-9xl font-black tracking-tighter mb-4 text-transparent bg-clip-text bg-gradient-to-br from-slate-900 to-slate-600">
+                  India <span className="bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-red-500">Viz</span>
                 </h1>
                 <div className="flex flex-col items-center gap-3 sm:gap-4 mt-6">
-                  <p className="text-sm sm:text-2xl lg:text-3xl font-bold tracking-[0.2em] uppercase text-slate-400">Demographics × Mobility</p>
-                  <p className="text-sm sm:text-lg lg:text-xl font-medium text-slate-500 max-w-2xl px-4 leading-relaxed">
+                  <p className="text-sm sm:text-2xl lg:text-3xl font-bold tracking-[0.2em] uppercase text-slate-500">Demographics × Mobility</p>
+                  <p className="text-sm sm:text-lg lg:text-xl font-medium text-slate-400 max-w-2xl px-4 leading-relaxed">
                     From the lens of census, district-wise and viz.
                   </p>
                 </div>
               </div>
               
               <div className="flex flex-col items-center gap-6 pt-6">
-                <button onClick={() => setView('app')} className="group relative px-10 py-4 sm:px-12 sm:py-5 bg-slate-900 text-white rounded-full font-bold text-lg sm:text-xl shadow-[0_15px_40px_rgba(0,0,0,0.15)] hover:scale-105 active:scale-95 transition-all flex items-center gap-3 mx-auto">
-                  Enter Workstation
+                <button onClick={() => setView('app')} className="group relative px-10 py-4 sm:px-12 sm:py-5 bg-slate-900 text-white rounded-full font-bold text-lg sm:text-xl shadow-[0_15px_30px_rgba(0,0,0,0.15)] hover:scale-105 active:scale-95 transition-all flex items-center gap-3 mx-auto">
+                  Launch Workstation
                   <ChevronRight size={22} className="sm:w-6 sm:h-6 group-hover:translate-x-1 transition-transform" />
                 </button>
-                <p className="text-xs font-bold uppercase tracking-widest text-slate-400 flex items-center gap-1.5">
+                <p className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-400 flex items-center gap-1.5">
                   Made with <Heart size={14} className="text-red-500 fill-red-500" /> by Kapil
                 </p>
               </div>
 
               {/* Clean Features Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-16 sm:mt-24 text-left">
-                <FeatureCard icon={<Globe className="text-blue-500"/>} title="Interactive Maps" desc="High-fidelity SVG geometry mapped for all 640+ Indian districts." />
-                <FeatureCard icon={<Target className="text-orange-500"/>} title="Benchmarking" desc="Real-time comparative analysis against national census averages." />
-                <FeatureCard icon={<BarChart3 className="text-emerald-500"/>} title="Mobility Intel" desc="Granular breakdown of commute distances and modal shares." />
-                <FeatureCard icon={<ShieldCheck className="text-purple-500"/>} title="Official Data" desc="Powered directly by the Primary Census Abstract 2011." />
+                <FeatureCard icon={<Globe className="text-blue-500" strokeWidth={1.5}/>} title="Interactive Maps" desc="High-fidelity SVG geometry mapped for all 640+ Indian districts." />
+                <FeatureCard icon={<Target className="text-orange-500" strokeWidth={1.5}/>} title="Benchmarking" desc="Real-time comparative analysis against national census averages." />
+                <FeatureCard icon={<BarChart3 className="text-emerald-500" strokeWidth={1.5}/>} title="Mobility Intel" desc="Granular breakdown of commute distances and modal shares." />
+                <FeatureCard icon={<ShieldCheck className="text-purple-500" strokeWidth={1.5}/>} title="Official Data" desc="Powered directly by the Primary Census Abstract 2011." />
               </div>
             </motion.div>
           </motion.div>
         ) : (
-          <motion.div key="app" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="flex-1 flex flex-col h-screen bg-slate-50">
+          <motion.div key="app" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }} className="flex-1 flex flex-col h-screen bg-white">
             
             {/* SURGICAL CLEAN HEADER */}
-            <header className="bg-white border-b border-slate-200 z-40 shadow-sm relative">
-              <div className="px-4 py-3 flex items-center justify-between gap-4">
+            <header className="bg-white/80 backdrop-blur-xl border-b border-slate-200 z-40 relative">
+              <div className="px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <button onClick={() => setView('landing')} className="p-2 bg-slate-50 text-slate-600 rounded-xl hover:bg-slate-100 transition-colors shrink-0 border border-slate-200"><Compass size={18}/></button>
+                  <button onClick={() => setView('landing')} className="p-2 sm:p-2.5 bg-slate-50 text-slate-600 rounded-xl hover:bg-slate-100 transition-colors shrink-0 border border-slate-200"><Compass size={18} className="sm:w-5 sm:h-5"/></button>
                   <div className="leading-tight">
-                    <h2 className="font-black text-base sm:text-lg tracking-tight text-slate-900">India Viz</h2>
-                    <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 hidden sm:block">Demographics × Mobility</p>
+                    <h2 className="font-black text-lg sm:text-xl tracking-tight text-slate-900">India Viz</h2>
+                    <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 hidden sm:block">Demographics × Mobility</p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 flex-1 justify-end">
-                  {/* Search - Visible nicely on desktop */}
-                  <div className="relative hidden md:block max-w-xs w-full">
+                <div className="flex items-center gap-4 flex-1 justify-end">
+                  
+                  {/* Segmented Layer Controls - Full Names, Horizontally Scrollable on Mobile */}
+                  <div className="flex items-center p-1 bg-slate-100/80 rounded-xl overflow-x-auto no-scrollbar w-full sm:w-auto border border-slate-200/50 shadow-inner">
+                    {Object.keys(LAYER_CONFIG).map(l => {
+                      const config = LAYER_CONFIG[l as keyof typeof LAYER_CONFIG];
+                      const isActive = layer === l;
+                      return (
+                        <button 
+                          key={l} 
+                          onClick={() => setLayer(l)} 
+                          className={`relative flex-none px-4 py-2 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-bold uppercase tracking-wider transition-colors duration-300 ${isActive ? 'text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}
+                        >
+                          {isActive && (
+                            <motion.div layoutId="active-pill" className="absolute inset-0 bg-white rounded-lg shadow-[0_2px_8px_rgb(0,0,0,0.06)] border border-slate-200/50" style={{ zIndex: 0 }} transition={{ type: "spring", stiffness: 400, damping: 30 }} />
+                          )}
+                          <span className="relative z-10">{config.label}</span>
+                        </button>
+                      )
+                    })}
+                  </div>
+
+                  {/* Desktop Search */}
+                  <div className="relative hidden lg:block max-w-xs w-full">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
                     <input type="text" placeholder="Search District..." value={search} onChange={e => setSearch(e.target.value)}
-                      className="pl-9 pr-4 py-2 w-full rounded-xl text-sm border border-slate-200 bg-slate-50 outline-none focus:ring-2 focus:ring-blue-500 transition-all" />
+                      className="pl-9 pr-4 py-2 w-full rounded-xl text-sm font-medium border border-slate-200 bg-slate-50 outline-none focus:ring-2 focus:ring-slate-200 focus:bg-white transition-all shadow-inner" />
                     <AnimatePresence>
                       {results.length > 0 && (
                         <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 5 }}
@@ -299,7 +315,7 @@ export default function App() {
                           {results.map((r, i) => (
                             <button key={i} onClick={() => { setSelected(r.properties); setSearch(''); }} className="w-full text-left px-4 py-3 text-sm hover:bg-slate-50 border-b last:border-0 border-slate-100 transition-colors">
                               <div className="font-bold text-slate-900">{r.properties.display_name}</div>
-                              <div className="text-[10px] text-slate-400 font-bold uppercase mt-0.5">{r.properties.display_state}</div>
+                              <div className="text-[10px] text-slate-400 font-bold uppercase mt-0.5 tracking-wider">{r.properties.display_state}</div>
                             </button>
                           ))}
                         </motion.div>
@@ -308,29 +324,10 @@ export default function App() {
                   </div>
                 </div>
               </div>
-
-              {/* LAYER CONTROLS - FULL NAMES, COLORFUL, SCROLLABLE ON MOBILE */}
-              <div className="px-4 pb-3 sm:absolute sm:bottom-0 sm:left-1/2 sm:-translate-x-1/2 sm:translate-y-1/2 z-50">
-                <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 sm:pb-0 sm:p-1.5 sm:bg-white sm:shadow-[0_8px_20px_rgb(0,0,0,0.08)] sm:rounded-2xl sm:border sm:border-slate-100">
-                  {Object.keys(LAYER_CONFIG).map(l => {
-                    const config = LAYER_CONFIG[l as keyof typeof LAYER_CONFIG];
-                    const isActive = layer === l;
-                    return (
-                      <button 
-                        key={l} 
-                        onClick={() => setLayer(l)} 
-                        className={`flex-none px-4 py-2 sm:py-1.5 rounded-xl text-[11px] sm:text-xs font-bold uppercase tracking-wide transition-all border ${isActive ? `${config.bg} text-white border-transparent shadow-md` : `bg-white text-slate-600 border-slate-200 hover:bg-slate-50`}`}
-                      >
-                        {config.label}
-                      </button>
-                    )
-                  })}
-                </div>
-              </div>
             </header>
 
             {/* MAP WORKSTATION */}
-            <main className="flex-1 relative flex flex-col md:flex-row overflow-hidden bg-[#f8fafc]">
+            <main className="flex-1 relative flex flex-col md:flex-row overflow-hidden bg-[#fafafa]">
               <div 
                 className={`flex-1 relative overflow-hidden flex items-center justify-center ${isDragging ? 'cursor-grabbing' : 'cursor-default'}`}
                 onMouseDown={e => handlePtrDown(e.clientX, e.clientY)} onMouseMove={e => handlePtrMove(e.clientX, e.clientY)} onMouseUp={() => setIsDragging(false)}
@@ -338,15 +335,15 @@ export default function App() {
                 style={{ touchAction: 'none' }}
               >
                 {loading ? (
-                  <div className="flex flex-col items-center gap-4"><div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" /></div>
+                  <div className="flex flex-col items-center gap-4"><div className="w-10 h-10 border-4 border-slate-300 border-t-slate-800 rounded-full animate-spin" /></div>
                 ) : (
                   <div style={{ transform: `translate(${transform.x}px, ${transform.y}px) scale(${transform.scale})`, transition: isDragging ? 'none' : 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)' }}>
-                    <svg viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`} className="w-[100vmin] h-[100vmin] md:w-[90vmin] md:h-[90vmin] overflow-visible drop-shadow-xl">
+                    <svg viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`} className="w-[100vmin] h-[100vmin] md:w-[90vmin] md:h-[90vmin] overflow-visible drop-shadow-[0_20px_40px_rgba(0,0,0,0.08)]">
                       {data.features.map((f: any, i: number) => {
                         const val = f.properties[LAYER_CONFIG[layer as keyof typeof LAYER_CONFIG].field];
                         const isSelected = selected?.display_name === f.properties.display_name;
                         return (
-                          <path key={i} d={f.svgPath} fill={getLayerColor(val, layer)} stroke={hovered === f || isSelected ? '#000' : '#ffffff80'} 
+                          <path key={i} d={f.svgPath} fill={getLayerColor(val, layer)} stroke={hovered === f || isSelected ? '#0f172a' : '#ffffff'} 
                             strokeWidth={(hovered === f || isSelected ? 2 : 0.5) / transform.scale} className="transition-all duration-200 cursor-pointer"
                             onMouseEnter={() => setHovered(f)} onMouseLeave={() => setHovered(null)} onClick={(e) => { e.stopPropagation(); setSelected(f.properties); }} />
                         );
@@ -355,10 +352,10 @@ export default function App() {
                   </div>
                 )}
 
-                {/* Always Visible Legend */}
-                <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 p-3 sm:p-4 rounded-2xl border bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)] border-slate-100 z-20 scale-90 sm:scale-100 origin-bottom-left">
-                  <h4 className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2.5 leading-none">{LAYER_CONFIG[layer as keyof typeof LAYER_CONFIG]?.label}</h4>
-                  <div className="flex h-2 sm:h-2.5 w-32 sm:w-40 rounded-full overflow-hidden bg-slate-100">
+                {/* Always Visible Mobile-Friendly Legend */}
+                <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 p-3 sm:p-4 rounded-2xl border bg-white/95 backdrop-blur-xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border-slate-100 z-20 scale-90 sm:scale-100 origin-bottom-left">
+                  <h4 className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-2.5 leading-none">{LAYER_CONFIG[layer as keyof typeof LAYER_CONFIG]?.label}</h4>
+                  <div className="flex h-2 sm:h-2.5 w-32 sm:w-40 rounded-full overflow-hidden bg-slate-100 border border-slate-200/50">
                     {LAYER_CONFIG[layer as keyof typeof LAYER_CONFIG]?.ramp.map((c, i) => <div key={i} className="flex-1" style={{ backgroundColor: c }} />)}
                   </div>
                   <div className="flex justify-between text-[8px] sm:text-[9px] font-bold text-slate-400 mt-1.5 tracking-wider"><span>LOW</span><span>HIGH</span></div>
@@ -382,20 +379,20 @@ export default function App() {
                     animate={{ y: 0, md: { x: 0 } }} 
                     exit={{ y: '100%', md: { y: 0, x: '100%' } }} 
                     transition={{ type: 'spring', damping: 35, stiffness: 300 }}
-                    className="fixed inset-x-0 bottom-0 h-[85vh] md:absolute md:inset-auto md:right-0 md:top-0 md:h-full md:w-[450px] lg:w-[500px] bg-white shadow-[0_-20px_50px_rgba(0,0,0,0.1)] md:shadow-[-20px_0_50px_rgba(0,0,0,0.05)] border-t md:border-t-0 md:border-l border-slate-200 z-[100] md:z-[60] rounded-t-3xl md:rounded-none flex flex-col"
+                    className="fixed inset-x-0 bottom-0 h-[85vh] md:absolute md:inset-auto md:right-0 md:top-0 md:h-full md:w-[450px] lg:w-[500px] bg-white shadow-[0_-20px_60px_rgba(0,0,0,0.15)] md:shadow-[-20px_0_60px_rgba(0,0,0,0.08)] border-t md:border-t-0 md:border-l border-slate-200 z-[100] md:z-[60] rounded-t-[2rem] md:rounded-none flex flex-col overflow-hidden"
                   >
-                    {/* STICKY HEADER - NEVER SCROLLS AWAY */}
-                    <div className="shrink-0 px-6 pt-6 pb-4 border-b border-slate-100 bg-white/95 backdrop-blur z-10 sticky top-0 flex items-start justify-between">
-                      <div>
-                        <div className="md:hidden w-10 h-1.5 bg-slate-200 rounded-full mx-auto mb-4 absolute top-2 left-1/2 -translate-x-1/2" />
-                        <p className="text-blue-500 font-bold text-[10px] tracking-widest uppercase mb-1">{selected.display_state}</p>
-                        <h2 className="text-3xl font-black tracking-tight leading-none text-slate-900">{selected.display_name}</h2>
+                    {/* STICKY HEADER - NEVER SCROLLS, NEVER OVERLAPS */}
+                    <div className="shrink-0 relative px-6 pt-6 pb-4 border-b border-slate-100 bg-white z-10 flex items-start justify-between">
+                      <div className="absolute top-2 left-1/2 -translate-x-1/2 md:hidden w-12 h-1.5 bg-slate-200 rounded-full" />
+                      <div className="pr-4 mt-2 md:mt-0">
+                        <p className="text-orange-500 font-bold text-[10px] tracking-[0.3em] uppercase mb-1.5">{selected.display_state}</p>
+                        <h2 className="text-3xl sm:text-4xl font-black tracking-tighter leading-tight text-slate-900 break-words">{selected.display_name}</h2>
                       </div>
-                      <button onClick={() => setSelected(null)} className="p-2 bg-slate-100 text-slate-600 rounded-full hover:bg-slate-200 transition-colors mt-2 md:mt-0"><X size={20} /></button>
+                      <button onClick={() => setSelected(null)} className="p-2 bg-slate-50 text-slate-500 hover:bg-slate-100 rounded-full transition-colors shrink-0 mt-2 md:mt-0"><X size={20} /></button>
                     </div>
 
-                    {/* SCROLLABLE CONTENT */}
-                    <div className="flex-1 overflow-y-auto p-6 space-y-8 no-scrollbar">
+                    {/* SCROLLABLE CONTENT BODY */}
+                    <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-6 sm:space-y-8 no-scrollbar bg-slate-50/50">
                       
                       {/* STATS BENTO */}
                       <div className="grid grid-cols-2 gap-3 sm:gap-4">
@@ -408,9 +405,9 @@ export default function App() {
                       </div>
 
                       {/* CHARTS */}
-                      <div className="space-y-8">
-                        <div className="p-6 rounded-3xl border border-slate-100 bg-white shadow-[0_4px_20px_rgb(0,0,0,0.03)]">
-                          <h3 className="text-xs font-bold uppercase tracking-widest mb-6 flex items-center gap-2 text-slate-800"><Navigation size={16} className="text-blue-500"/> Mode Share %</h3>
+                      <div className="space-y-6 sm:space-y-8 pb-10">
+                        <div className="p-5 sm:p-6 rounded-[2rem] border border-slate-100 bg-white shadow-[0_4px_20px_rgb(0,0,0,0.02)]">
+                          <h3 className="text-xs font-black uppercase tracking-widest mb-6 flex items-center gap-2 text-slate-800"><Navigation size={16} className="text-blue-500"/> Mode Share %</h3>
                           <div className="h-56">
                             <ResponsiveContainer width="100%" height="100%">
                               <PieChart>
@@ -423,15 +420,15 @@ export default function App() {
                                 ]} innerRadius={50} outerRadius={80} paddingAngle={3} dataKey="value" stroke="none" label={(entry) => `${entry.value}%`} labelLine={false}>
                                   {Object.values(MODE_COLORS).map((c, i) => <Cell key={i} fill={c} />)}
                                 </Pie>
-                                <RechartsTooltip contentStyle={{ borderRadius: '12px', border: 'none', fontSize: '12px', fontWeight: 'bold', boxShadow: '0 10px 25px rgba(0,0,0,0.1)' }} formatter={(v) => `${v}%`} />
+                                <RechartsTooltip contentStyle={{ borderRadius: '12px', border: 'none', fontSize: '12px', fontWeight: 'bold', boxShadow: '0 10px 25px rgba(0,0,0,0.08)' }} formatter={(v) => `${v}%`} />
                                 <Legend verticalAlign="bottom" height={30} wrapperStyle={{ fontSize: '10px', fontWeight: 'bold' }} />
                               </PieChart>
                             </ResponsiveContainer>
                           </div>
                         </div>
 
-                        <div className="p-6 rounded-3xl border border-slate-100 bg-white shadow-[0_4px_20px_rgb(0,0,0,0.03)] mb-10">
-                          <h3 className="text-xs font-bold uppercase tracking-widest mb-6 flex items-center gap-2 text-slate-800"><Ruler size={16} className="text-orange-500"/> Distance (% Workers)</h3>
+                        <div className="p-5 sm:p-6 rounded-[2rem] border border-slate-100 bg-white shadow-[0_4px_20px_rgb(0,0,0,0.02)]">
+                          <h3 className="text-xs font-black uppercase tracking-widest mb-6 flex items-center gap-2 text-slate-800"><Ruler size={16} className="text-orange-500"/> Distance (% Workers)</h3>
                           <div className="h-52">
                             <ResponsiveContainer width="100%" height="100%">
                               <BarChart data={[
@@ -439,11 +436,11 @@ export default function App() {
                                 { name: '1-5 km', value: parseFloat(selected.distance.oneToFive.toFixed(1)), fill: '#fbbf24' },
                                 { name: '5-10 km', value: parseFloat(selected.distance.fiveToTen.toFixed(1)), fill: '#60a5fa' },
                                 { name: '10+ km', value: parseFloat(selected.distance.overTen.toFixed(1)), fill: '#f87171' }
-                              ]} layout="vertical" margin={{ left: 0, right: 35 }}>
+                              ]} layout="vertical" margin={{ left: 0, right: 40 }}>
                                 <CartesianGrid strokeDasharray="3 3" horizontal={false} opacity={0.3} />
                                 <XAxis type="number" hide />
                                 <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 'bold', fill: '#64748b' }} width={55} />
-                                <RechartsTooltip cursor={{ fill: '#f1f5f9' }} formatter={(v: number) => `${v}%`} contentStyle={{ borderRadius: '12px', border: 'none', fontSize: '12px', fontWeight: 'bold', boxShadow: '0 10px 25px rgba(0,0,0,0.1)' }}/>
+                                <RechartsTooltip cursor={{ fill: '#f8fafc' }} formatter={(v: number) => `${v}%`} contentStyle={{ borderRadius: '12px', border: 'none', fontSize: '12px', fontWeight: 'bold', boxShadow: '0 10px 25px rgba(0,0,0,0.08)' }}/>
                                 <Bar dataKey="value" radius={[0, 6, 6, 0]} barSize={20}>
                                    <LabelList dataKey="value" position="right" formatter={(v: string) => `${v}%`} style={{ fontSize: 11, fontWeight: 'bold', fill: '#0f172a' }} />
                                 </Bar>
@@ -457,17 +454,6 @@ export default function App() {
                 )}
               </AnimatePresence>
             </main>
-
-            {/* REAL FOOTER */}
-            <footer className="px-4 sm:px-6 py-4 border-t border-slate-200 bg-white flex flex-col sm:flex-row justify-between items-center text-[10px] font-bold uppercase tracking-widest text-slate-500 z-40 relative">
-              <div className="flex items-center gap-4 text-center sm:text-left mb-2 sm:mb-0">
-                <span>India Viz &copy; 2024</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                Made with <Heart size={12} className="text-red-500 fill-red-500 mx-0.5" /> by 
-                <a href="https://kapil2020.github.io/website/" target="_blank" rel="noreferrer" className="text-blue-600 hover:text-blue-700 transition-colors ml-0.5">Kapil</a>
-              </div>
-            </footer>
           </motion.div>
         )}
       </AnimatePresence>
@@ -478,7 +464,7 @@ export default function App() {
 // --- UI COMPONENTS ---
 function FeatureCard({ icon, title, desc }: any) {
   return (
-    <div className="p-6 rounded-[2rem] border border-slate-100 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:-translate-y-1">
+    <div className="p-6 rounded-[2rem] border border-slate-100 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.03)] transition-all hover:shadow-[0_15px_40px_rgb(0,0,0,0.08)] hover:-translate-y-1">
       <div className="mb-4 bg-slate-50 w-fit p-3 rounded-2xl border border-slate-100 text-slate-700">{icon}</div>
       <h4 className="font-bold text-sm uppercase tracking-widest mb-2 text-slate-900">{title}</h4>
       <p className="text-xs text-slate-500 font-medium leading-relaxed">{desc}</p>
@@ -490,7 +476,7 @@ function AnalysisCard({ label, value, target, current, sub, config, icon }: any)
   const diff = ((current - target) / target) * 100;
   const isHigher = diff >= 0;
   return (
-    <div className={`p-4 rounded-3xl border bg-white shadow-sm flex flex-col justify-between ${config?.border || 'border-slate-100'}`}>
+    <div className={`p-4 rounded-3xl border bg-white shadow-[0_4px_15px_rgb(0,0,0,0.02)] flex flex-col justify-between transition-transform hover:-translate-y-0.5 ${config?.border || 'border-slate-100'}`}>
       <div>
         <div className="flex items-center justify-between mb-3">
           <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 leading-tight">{label}</p>
