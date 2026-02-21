@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Legend, LabelList
+  PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, LabelList
 } from 'recharts';
 import {
   Search, X, Users, BookOpen, Footprints, Bus, Navigation, ZoomIn, ZoomOut, Home, 
-  Globe, Compass, ChevronRight, Ruler, TrendingUp, TrendingDown, ChevronDown, Heart, Briefcase, 
+  Globe, Compass, ChevronRight, Ruler, TrendingUp, TrendingDown, Heart, Briefcase, 
   Target, BarChart3, ShieldCheck
 } from 'lucide-react';
 
@@ -338,9 +338,9 @@ export default function App() {
             
             <PencilDoodle />
             
-            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1, duration: 0.8 }} className="z-10 max-w-5xl w-full flex flex-col items-center">
+            <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1, duration: 0.8 }} className="z-10 max-w-5xl w-full flex flex-col items-center">
               
-              <div className="bg-white text-blue-600 p-5 rounded-[2rem] w-fit shadow-[0_15px_40px_rgba(0,0,0,0.08)] border border-slate-100 mb-10">
+              <div className="bg-white/80 backdrop-blur-xl text-blue-600 p-5 rounded-[2rem] w-fit mx-auto shadow-[0_15px_40px_rgba(0,0,0,0.06)] border border-white mb-10">
                 <Compass size={52} strokeWidth={2} />
               </div>
               
@@ -363,7 +363,7 @@ export default function App() {
               </button>
             </motion.div>
 
-            <div className="absolute bottom-8 left-0 right-0 flex justify-center text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400 gap-1.5">
+            <div className="absolute bottom-8 left-0 right-0 flex justify-center text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400 gap-1.5 z-10">
               Made with <Heart size={14} className="text-rose-500 fill-rose-500" /> by Kapil
             </div>
           </motion.div>
@@ -375,7 +375,7 @@ export default function App() {
               
               {/* Brand Logo & Search */}
               <div className="flex w-full sm:w-auto items-center gap-3 pointer-events-auto">
-                <button onClick={() => setView('landing')} className="p-3 bg-white/90 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.06)] border border-slate-100 rounded-2xl hover:scale-105 hover:shadow-[0_15px_40px_rgba(0,0,0,0.1)] transition-all text-blue-600 shrink-0">
+                <button onClick={() => setView('landing')} className="p-3 bg-white/90 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.06)] border border-white rounded-2xl hover:scale-105 hover:shadow-[0_15px_40px_rgba(0,0,0,0.1)] transition-all text-blue-600 shrink-0">
                   <Compass size={22} strokeWidth={2.5} />
                 </button>
                 
@@ -383,12 +383,12 @@ export default function App() {
                 <div className="relative flex-1 sm:w-64">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                   <input type="text" placeholder="Search District..." value={search} onChange={e => setSearch(e.target.value)}
-                    className="pl-11 pr-4 py-3.5 w-full rounded-2xl text-sm font-bold border border-slate-100 bg-white/90 backdrop-blur-xl outline-none focus:ring-2 focus:ring-blue-500/30 shadow-[0_8px_30px_rgba(0,0,0,0.06)] transition-all placeholder:text-slate-400" />
+                    className="pl-11 pr-4 py-3 sm:py-3.5 w-full rounded-2xl text-sm font-bold border border-white bg-white/90 backdrop-blur-xl outline-none focus:ring-2 focus:ring-blue-500/30 shadow-[0_8px_30px_rgba(0,0,0,0.06)] transition-all placeholder:text-slate-400" />
                   
                   <AnimatePresence>
                     {results.length > 0 && (
                       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
-                        className="absolute top-full left-0 right-0 mt-3 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-slate-100 bg-white/95 backdrop-blur-3xl overflow-hidden z-[100]">
+                        className="absolute top-full left-0 right-0 mt-3 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-white bg-white/95 backdrop-blur-3xl overflow-hidden z-[100]">
                         {results.map((r, i) => (
                           <button key={i} onClick={() => { setSelected(r.properties); setSearch(''); }} className="w-full text-left px-5 py-4 hover:bg-blue-50 border-b last:border-0 border-slate-100 transition-colors">
                             <div className="font-bold text-slate-900">{r.properties.display_name}</div>
@@ -402,7 +402,7 @@ export default function App() {
               </div>
 
               {/* Desktop Layer Controls (Colorful & Floating) */}
-              <div className="hidden sm:flex items-center p-1.5 bg-white/90 backdrop-blur-xl rounded-2xl border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.06)] pointer-events-auto">
+              <div className="hidden sm:flex items-center p-1.5 bg-white/90 backdrop-blur-xl rounded-2xl border border-white shadow-[0_8px_30px_rgba(0,0,0,0.06)] pointer-events-auto">
                 {Object.keys(LAYER_CONFIG).map(l => {
                   const config = LAYER_CONFIG[l as keyof typeof LAYER_CONFIG];
                   const isActive = layer === l;
@@ -456,7 +456,7 @@ export default function App() {
                 )}
 
                 {/* Legend - Floating Bottom Left */}
-                <div className="absolute bottom-28 sm:bottom-8 left-4 sm:left-6 p-4 sm:p-5 rounded-3xl bg-white/95 backdrop-blur-xl shadow-[0_15px_40px_rgba(0,0,0,0.08)] border border-slate-100 z-20 pointer-events-none hidden sm:block">
+                <div className="absolute bottom-28 sm:bottom-8 left-4 sm:left-6 p-4 sm:p-5 rounded-3xl bg-white/95 backdrop-blur-xl shadow-[0_15px_40px_rgba(0,0,0,0.08)] border border-white z-20 pointer-events-none hidden sm:block">
                   <h4 className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 mb-3">{LAYER_CONFIG[layer as keyof typeof LAYER_CONFIG]?.label}</h4>
                   <div className="flex h-3 w-32 sm:w-48 rounded-full overflow-hidden shadow-inner bg-slate-100">
                     {LAYER_CONFIG[layer as keyof typeof LAYER_CONFIG]?.ramp.map((c, i) => <div key={i} className="flex-1" style={{ backgroundColor: c }} />)}
@@ -466,8 +466,8 @@ export default function App() {
 
                 {/* Zoom Controls - Desktop Only */}
                 <div className="hidden sm:flex absolute bottom-8 right-6 flex-col gap-3 z-20 pointer-events-auto">
-                  <button onClick={() => setTransform({ x: 0, y: 0, scale: 1 })} className="p-4 bg-white/90 backdrop-blur-xl rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.08)] border border-slate-100 active:scale-95 transition-transform text-slate-700 hover:text-blue-600 hover:bg-white"><Home size={20} /></button>
-                  <div className="flex flex-col rounded-2xl overflow-hidden shadow-[0_15px_40px_rgba(0,0,0,0.08)] border border-slate-100 bg-white/90 backdrop-blur-xl text-slate-700">
+                  <button onClick={() => setTransform({ x: 0, y: 0, scale: 1 })} className="p-4 bg-white/90 backdrop-blur-xl rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.08)] border border-white active:scale-95 transition-transform text-slate-700 hover:text-blue-600 hover:bg-white"><Home size={20} /></button>
+                  <div className="flex flex-col rounded-2xl overflow-hidden shadow-[0_15px_40px_rgba(0,0,0,0.08)] border border-white bg-white/90 backdrop-blur-xl text-slate-700">
                     <button onClick={() => setTransform(p => ({ ...p, scale: p.scale + 0.5 }))} className="p-4 hover:bg-slate-50 transition-colors border-b border-slate-100 hover:text-blue-600"><ZoomIn size={20} /></button>
                     <button onClick={() => setTransform(p => ({ ...p, scale: Math.max(0.5, p.scale - 0.5) }))} className="p-4 hover:bg-slate-50 transition-colors hover:text-blue-600"><ZoomOut size={20} /></button>
                   </div>
@@ -513,22 +513,47 @@ export default function App() {
                           <AnalysisCard label="Public Transit" value={`${selected.mobility.pt}%`} target={INDIA_AVG.publicTransit} current={selected.mobility.pt} sub="Bus / Train" icon={<Bus size={16}/>} config={LAYER_CONFIG.public} />
                         </div>
 
-                        {/* NATIVE iOS STYLE CHARTS (NO RECHARTS ON MOBILE FOR 100% RELIABILITY) */}
+                        {/* CHARTS */}
                         <div className="space-y-6 sm:space-y-8 pb-12">
                           
-                          {/* Native Mode Share Stacked Bar */}
-                          <div className="p-6 sm:p-8 rounded-[2rem] bg-white border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
-                            <h3 className="text-[11px] font-black uppercase tracking-[0.2em] mb-6 flex items-center gap-2 text-slate-800"><Navigation size={18} className="text-blue-500"/> Mode Share</h3>
+                          {/* RESTORED PIE CHART - Designed explicitly for mobile perfection */}
+                          <div className="p-6 sm:p-8 rounded-[2rem] bg-white border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.04)] flex flex-col">
+                            <h3 className="text-[11px] font-black uppercase tracking-[0.2em] mb-4 flex items-center gap-2 text-slate-800"><Navigation size={18} className="text-blue-500"/> Mode Share</h3>
                             
-                            <div className="w-full h-7 sm:h-8 rounded-full overflow-hidden flex mb-8 shadow-inner bg-slate-100">
-                              <motion.div initial={{width:0}} animate={{width:`${selected.mobility.walk}%`}} transition={{duration: 0.8, ease: "easeOut"}} className="h-full" style={{backgroundColor: MODE_COLORS.walk}} title="Walk"/>
-                              <motion.div initial={{width:0}} animate={{width:`${selected.mobility.bicycle}%`}} transition={{duration: 0.8, ease: "easeOut", delay: 0.1}} className="h-full" style={{backgroundColor: MODE_COLORS.bicycle}} title="Bicycle"/>
-                              <motion.div initial={{width:0}} animate={{width:`${selected.mobility.pt}%`}} transition={{duration: 0.8, ease: "easeOut", delay: 0.2}} className="h-full" style={{backgroundColor: MODE_COLORS.public}} title="Public"/>
-                              <motion.div initial={{width:0}} animate={{width:`${selected.mobility.twowheeler}%`}} transition={{duration: 0.8, ease: "easeOut", delay: 0.3}} className="h-full" style={{backgroundColor: MODE_COLORS.twoWheeler}} title="2W"/>
-                              <motion.div initial={{width:0}} animate={{width:`${selected.mobility.car}%`}} transition={{duration: 0.8, ease: "easeOut", delay: 0.4}} className="h-full" style={{backgroundColor: MODE_COLORS.car}} title="Car"/>
+                            {/* Recharts Pie with carefully constrained layout */}
+                            <div className="h-48 sm:h-52 w-full relative mb-4">
+                              <ResponsiveContainer width="100%" height="100%">
+                                <PieChart>
+                                  <Pie 
+                                    data={[
+                                      { name: 'Walk', value: parseFloat((selected.mobility.walk || 0).toFixed(1)), color: MODE_COLORS.walk },
+                                      { name: 'Cycle', value: parseFloat((selected.mobility.cycle || 0).toFixed(1)), color: MODE_COLORS.bicycle },
+                                      { name: '2W', value: parseFloat((selected.mobility.twowheeler || 0).toFixed(1)), color: MODE_COLORS.twoWheeler },
+                                      { name: 'Car', value: parseFloat((selected.mobility.car || 0).toFixed(1)), color: MODE_COLORS.car },
+                                      { name: 'Public', value: parseFloat((selected.mobility.pt || 0).toFixed(1)), color: MODE_COLORS.publicTransport }
+                                    ]} 
+                                    innerRadius="60%" 
+                                    outerRadius="85%" 
+                                    paddingAngle={3} 
+                                    dataKey="value" 
+                                    stroke="none"
+                                  >
+                                    {Object.values(MODE_COLORS).map((c, i) => <Cell key={i} fill={c} />)}
+                                  </Pie>
+                                  <RechartsTooltip 
+                                    contentStyle={{ borderRadius: '12px', border: 'none', fontSize: '12px', fontWeight: 'bold', boxShadow: '0 10px 25px rgba(0,0,0,0.08)' }} 
+                                    formatter={(v: number) => `${v}%`} 
+                                  />
+                                </PieChart>
+                              </ResponsiveContainer>
+                              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                                <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Total</span>
+                                <span className="text-sm font-black text-slate-900">100%</span>
+                              </div>
                             </div>
 
-                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-4 sm:gap-y-5 gap-x-2">
+                            {/* Guaranteed explicit percentage labels (No clicking required) */}
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-4 gap-x-2 w-full border-t border-slate-100 pt-5">
                               <LegendItem color={MODE_COLORS.walk} label="Walk" value={selected.mobility.walk || 0} />
                               <LegendItem color={MODE_COLORS.bicycle} label="Bicycle" value={selected.mobility.bicycle || 0} />
                               <LegendItem color={MODE_COLORS.public} label="Public" value={selected.mobility.pt || 0} />
@@ -625,21 +650,21 @@ function AnalysisCard({ label, value, target, current, sub, config, icon }: any)
   );
 }
 
-// 100% Native Legend Item (Replaces Recharts)
+// 100% Native Legend Item (Displays explicit percentages under the Pie Chart)
 function LegendItem({ color, label, value }: { color: string, label: string, value: number }) {
   const displayValue = value !== undefined && value !== null ? Number(value).toFixed(1) : '0.0';
   return (
-    <div className="flex items-center justify-between p-2 sm:p-2.5 rounded-2xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100">
+    <div className="flex items-center justify-between p-2 rounded-2xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100">
       <div className="flex items-center gap-2">
         <div className="w-3.5 h-3.5 rounded-full shadow-sm" style={{ backgroundColor: color }} />
         <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-slate-500">{label}</span>
       </div>
-      <span className="text-sm font-black text-slate-900">{displayValue}%</span>
+      <span className="text-xs sm:text-sm font-black text-slate-900">{displayValue}%</span>
     </div>
   );
 }
 
-// 100% Native Progress Bar (Replaces Recharts BarChart)
+// 100% Native Progress Bar
 function ProgressBar({ label, value, color }: { label: string, value: number, color: string }) {
   const displayValue = value !== undefined && value !== null ? Number(value).toFixed(1) : '0.0';
   return (
